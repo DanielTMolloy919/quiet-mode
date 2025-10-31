@@ -1,4 +1,5 @@
 import { browser } from "wxt/browser";
+import "./styles.css";
 
 interface RemoteConfig {
   version: string;
@@ -26,7 +27,6 @@ let attributeObserver: MutationObserver | null = null;
 
 export default defineContentScript({
   matches: ["*://*.youtube.com/*", "*://*.reddit.com/*", "*://*.instagram.com/*"],
-  cssInjectionMode: "ui",
   main() {
     console.log("[Tranquilize:Content] Content script initialized");
     init();
