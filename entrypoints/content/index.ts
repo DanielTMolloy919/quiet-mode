@@ -1,5 +1,4 @@
 import { browser } from "wxt/browser";
-import "./styles.css";
 
 interface RemoteConfig {
   version: string;
@@ -24,14 +23,53 @@ let settings: Record<string, boolean> | null = null;
 let config: RemoteConfig | null = null;
 let isInitialized = false;
 let attributeObserver: MutationObserver | null = null;
+let styleElement: HTMLStyleElement | null = null;
 
 export default defineContentScript({
-  matches: ["*://*.youtube.com/*", "*://*.reddit.com/*", "*://*.instagram.com/*"],
+  matches: [
+    "*://*.youtube.com/*",
+    "*://*.reddit.com/*",
+    "*://*.instagram.com/*",
+  ],
   main() {
     console.log("[Tranquilize:Content] Content script initialized");
     init();
   },
 });
+
+// Generate and inject CSS dynamically from config
+function injectDynamicCSS(config: RemoteConfig) {
+  console.log("[Tranquilize:Content] Generating dynamic CSS from config");
+
+  const cssRules: string[] = [];
+
+  // Generate CSS rules for each site and rule
+  for (const [siteName, siteConfig] of Object.entries(config.sites)) {
+    for (const rule of siteConfig.rules) {
+      const attributeName = `tranquilize_${siteName}_${rule.id}`;
+
+      // Create CSS rule for each selector
+      for (const selector of rule.selectors) {
+        // Escape the selector if needed and create the rule
+        cssRules.push(
+          `html[${attributeName}="true"] ${selector} { display: none !important; }`
+        );
+      }
+    }
+  }
+
+  // Create or update style element
+  if (!styleElement) {
+    styleElement = document.createElement("style");
+    styleElement.id = "tranquilize-dynamic-styles";
+    document.head.appendChild(styleElement);
+    console.log("[Tranquilize:Content] Created style element");
+  }
+
+  // Set the CSS content
+  styleElement.textContent = cssRules.join("\n");
+  console.log(`[Tranquilize:Content] Injected ${cssRules.length} CSS rules`);
+}
 
 // Initialize with retry logic for Firefox
 async function init(retries = 3) {
@@ -49,13 +87,18 @@ async function init(retries = 3) {
 
     config = remoteConfig;
 
+    // Generate and inject CSS from config
+    injectDynamicCSS(config);
+
     // Load user settings
     const data = await browser.storage.sync.get("settings");
     console.log("[Tranquilize:Content] Retrieved settings:", data.settings);
     settings = data.settings;
 
     if (!settings || Object.keys(settings).length === 0) {
-      console.log("[Tranquilize:Content] No settings found, generating defaults");
+      console.log(
+        "[Tranquilize:Content] No settings found, generating defaults"
+      );
       settings = generateDefaultSettings(config as RemoteConfig);
       await browser.storage.sync.set({ settings });
     }
@@ -220,7 +263,10 @@ function applyRules(rules: BlockRule[], currentUrl: string, siteName: string) {
         const regex = new RegExp(pattern);
         return regex.test(currentUrl);
       } catch (error) {
-        console.error(`[Tranquilize:Content] Invalid regex pattern: ${pattern}`, error);
+        console.error(
+          `[Tranquilize:Content] Invalid regex pattern: ${pattern}`,
+          error
+        );
         return false;
       }
     });
