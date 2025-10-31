@@ -1,0 +1,49 @@
+/* YouTube Rules */
+html[tranquilize_youtube_home_feed="true"] ytd-rich-grid-renderer {
+  display: none !important;
+}
+
+html[tranquilize_youtube_channel_feeds="true"] #contents {
+  display: none !important;
+}
+
+html[tranquilize_youtube_sidebar="true"] #guide-content,
+html[tranquilize_youtube_sidebar="true"] #guide-button,
+html[tranquilize_youtube_sidebar="true"] ytd-mini-guide-renderer {
+  display: none !important;
+}
+
+html[tranquilize_youtube_suggestions="true"] #related,
+html[tranquilize_youtube_suggestions="true"] .ytp-fullscreen-grid {
+  display: none !important;
+}
+
+/* Reddit Rules */
+html[tranquilize_reddit_home_feed="true"] .subgrid-container {
+  display: none !important;
+}
+
+html[tranquilize_reddit_subreddits="true"] #main-content > div:last-of-type {
+  display: none !important;
+}
+
+html[tranquilize_reddit_sidebar="true"] reddit-sidebar-nav,
+html[tranquilize_reddit_sidebar="true"] #navbar-menu-button {
+  display: none !important;
+}
+
+html[tranquilize_reddit_suggestions="true"] pdp-right-rail {
+  display: none !important;
+}
+
+/* Instagram Rules */
+html[tranquilize_instagram_home_feed="true"] main[role='main'] article {
+  display: none !important;
+}
+
+html[tranquilize_instagram_reels="true"] [role='tablist'] a[href='/reels/'],
+html[tranquilize_instagram_reels="true"] [role='tablist'] a[href='/reels'],
+html[tranquilize_instagram_reels="true"] video {
+  display: none !important;
+}
+
