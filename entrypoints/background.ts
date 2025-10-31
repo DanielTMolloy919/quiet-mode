@@ -33,7 +33,10 @@ export default defineBackground(() => {
 
   // Initialize on install/update
   browser.runtime.onInstalled.addListener(async (details) => {
-    console.log("[Tranquilize:Background] Extension installed/updated:", details);
+    console.log(
+      "[Tranquilize:Background] Extension installed/updated:",
+      details
+    );
     await loadConfig(true); // Force refresh on install/update
   });
 
@@ -42,7 +45,12 @@ export default defineBackground(() => {
 
   // Handle messages from popup and content scripts
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("[Tranquilize:Background] Message received:", request, "from:", sender);
+    console.log(
+      "[Tranquilize:Background] Message received:",
+      request,
+      "from:",
+      sender
+    );
 
     if (request.message === "ping") {
       console.log("[Tranquilize:Background] Responding to ping");
@@ -52,7 +60,7 @@ export default defineBackground(() => {
 
     if (request.message === "getConfig") {
       console.log("[Tranquilize:Background] Config requested");
-      
+
       // Return cached config if available
       if (cachedConfig) {
         console.log("[Tranquilize:Background] Returning cached config");
@@ -67,7 +75,10 @@ export default defineBackground(() => {
           sendResponse(config);
         })
         .catch((error) => {
-          console.error("[Tranquilize:Background] Error loading config:", error);
+          console.error(
+            "[Tranquilize:Background] Error loading config:",
+            error
+          );
           sendResponse(null);
         });
 
@@ -76,14 +87,17 @@ export default defineBackground(() => {
 
     if (request.message === "refreshConfig") {
       console.log("[Tranquilize:Background] Force refresh requested");
-      
+
       loadConfig(true)
         .then((config) => {
           console.log("[Tranquilize:Background] Config refreshed");
           sendResponse(config);
         })
         .catch((error) => {
-          console.error("[Tranquilize:Background] Error refreshing config:", error);
+          console.error(
+            "[Tranquilize:Background] Error refreshing config:",
+            error
+          );
           sendResponse(null);
         });
 
@@ -97,13 +111,16 @@ export default defineBackground(() => {
   browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete" && tab.url) {
       console.log("[Tranquilize:Background] Tab updated:", tabId, tab.url);
-      
+
       // Send message to content script to process the tab
       browser.tabs
         .sendMessage(tabId, { message: "processTab" })
         .catch((error) => {
           // Silently fail if content script not loaded (expected for some pages)
-          console.log("[Tranquilize:Background] Could not send to tab:", error.message);
+          console.log(
+            "[Tranquilize:Background] Could not send to tab:",
+            error.message
+          );
         });
     }
   });
@@ -116,7 +133,9 @@ export default defineBackground(() => {
         changes[CONFIG_TIMESTAMP_KEY] ||
         changes[CONFIG_VERSION_KEY]
       ) {
-        console.log("[Tranquilize:Background] Config cache cleared, reloading...");
+        console.log(
+          "[Tranquilize:Background] Config cache cleared, reloading..."
+        );
         cachedConfig = null;
         loadConfig(false);
       }
@@ -126,9 +145,15 @@ export default defineBackground(() => {
   console.log("[Tranquilize:Background] All listeners registered");
 });
 
-async function loadConfig(forceRefresh: boolean = false): Promise<RemoteConfig | null> {
+async function loadConfig(
+  forceRefresh: boolean = false
+): Promise<RemoteConfig | null> {
   try {
-    console.log("[Tranquilize:Background] Loading config (force:", forceRefresh, ")");
+    console.log(
+      "[Tranquilize:Background] Loading config (force:",
+      forceRefresh,
+      ")"
+    );
 
     // Check cache first unless force refresh
     if (!forceRefresh && cachedConfig) {
@@ -151,27 +176,30 @@ async function loadConfig(forceRefresh: boolean = false): Promise<RemoteConfig |
         const age = Date.now() - timestamp;
         if (age < CACHE_DURATION) {
           console.log(
-            `[Tranquilize:Background] Using stored cache (age: ${Math.round(age / 1000)}s)`
+            `[Tranquilize:Background] Using stored cache (age: ${Math.round(
+              age / 1000
+            )}s)`
           );
           cachedConfig = config;
           return config;
         } else {
           console.log(
-            `[Tranquilize:Background] Cache expired (age: ${Math.round(age / 1000)}s)`
+            `[Tranquilize:Background] Cache expired (age: ${Math.round(
+              age / 1000
+            )}s)`
           );
         }
       }
     }
 
     // Fetch fresh config
-    console.log("[Tranquilize:Background] Fetching remote config from:", REMOTE_CONFIG_URL);
-    
-    const response = await fetch(REMOTE_CONFIG_URL, {
-      cache: "no-cache",
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    });
+    console.log(
+      "[Tranquilize:Background] Fetching remote config from:",
+      REMOTE_CONFIG_URL
+    );
+
+    // Simple GET request to avoid CORS preflight
+    const response = await fetch(REMOTE_CONFIG_URL + "?t=" + Date.now());
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -201,7 +229,9 @@ async function loadConfig(forceRefresh: boolean = false): Promise<RemoteConfig |
 
     // Fallback to cached config even if expired
     if (cachedConfig) {
-      console.log("[Tranquilize:Background] Using stale in-memory cache as fallback");
+      console.log(
+        "[Tranquilize:Background] Using stale in-memory cache as fallback"
+      );
       return cachedConfig;
     }
 
@@ -209,12 +239,17 @@ async function loadConfig(forceRefresh: boolean = false): Promise<RemoteConfig |
     try {
       const stored = await browser.storage.local.get(CONFIG_CACHE_KEY);
       if (stored[CONFIG_CACHE_KEY]) {
-        console.log("[Tranquilize:Background] Using stale storage cache as fallback");
+        console.log(
+          "[Tranquilize:Background] Using stale storage cache as fallback"
+        );
         cachedConfig = stored[CONFIG_CACHE_KEY];
         return cachedConfig;
       }
     } catch (storageError) {
-      console.error("[Tranquilize:Background] Error loading from storage:", storageError);
+      console.error(
+        "[Tranquilize:Background] Error loading from storage:",
+        storageError
+      );
     }
 
     return null;

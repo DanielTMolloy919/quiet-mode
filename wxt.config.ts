@@ -13,6 +13,7 @@ export default defineConfig({
       "*://*.youtube.com/*",
       "*://*.reddit.com/*",
       "*://*.instagram.com/*",
+      "https://raw.githubusercontent.com/*",
     ],
   },
   vite: () => ({
