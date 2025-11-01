@@ -49,14 +49,28 @@ const YOUTUBE_SETTINGS: SettingConfig[] = [
     category: "Navigation",
   },
   {
-    id: "hide_recommended",
-    displayName: "Hide Recommended Videos",
-    category: "Watch Page",
-  },
-  {
     id: "hide_sidebar",
     displayName: "Hide Right Sidebar",
     category: "Watch Page",
+    children: ["hide_recommended", "hide_chat", "hide_playlists"],
+  },
+  {
+    id: "hide_recommended",
+    displayName: "Hide Recommended Videos",
+    category: "Watch Page",
+    parent: "hide_sidebar",
+  },
+  {
+    id: "hide_chat",
+    displayName: "Hide Live Chat",
+    category: "Watch Page",
+    parent: "hide_sidebar",
+  },
+  {
+    id: "hide_playlists",
+    displayName: "Hide Playlists",
+    category: "Watch Page",
+    parent: "hide_sidebar",
   },
   { id: "hide_comments", displayName: "Hide Comments", category: "Watch Page" },
   {
@@ -301,6 +315,8 @@ export default function Popup() {
                         <div
                           key={settingKey}
                           className={`p-2 rounded-lg transition-colors ${
+                            isChild ? "ml-6" : ""
+                          } ${
                             isDisabled
                               ? "opacity-50 cursor-not-allowed"
                               : "hover:bg-accent/50 cursor-pointer"

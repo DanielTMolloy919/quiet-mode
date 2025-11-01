@@ -15,6 +15,7 @@ html[hide_bar="true"] #info > #menu-container,
 html[hide_channel="true"] #owner.ytd-watch-metadata,
 html[hide_channel="true"] #top-row.ytd-video-secondary-info-renderer,
 html[hide_channel="true"][hide_desc="true"] #primary-inner > #meta,
+html[hide_chat="true"] ytd-live-chat-frame#chat,
 html[hide_comments="true"] #comment-teaser,
 html[hide_comments="true"] #comments,
 html[hide_desc="true"] #description.ytd-watch-metadata,
@@ -35,6 +36,7 @@ html[hide_notifs="true"]
   #buttons.ytd-masthead
   > ytd-notification-topbar-button-renderer.ytd-masthead,
 html[hide_notifs="true"] ytd-notification-topbar-button-shape-renderer,
+html[hide_playlists="true"] #playlist,
 html[hide_recommended="true"] #items.ytd-watch-next-secondary-results-renderer,
 html[hide_recommended="true"] .ytd-watch-grid > #contents,
 html[hide_recommended="true"] .ytp-pause-overlay,
@@ -110,6 +112,7 @@ html[hide_feed="true"] div[tab-identifier="FEwhat_to_watch"],
 html[hide_header="true"] .mobile-topbar-header,
 html[hide_meta="true"]
   ytm-item-section-renderer[section-identifier="slim-video-metadata"],
+html[hide_playlists="true"] ytm-playlist,
 html[hide_recommended="true"]
   ytm-item-section-renderer[section-identifier="related-items"],
 html[hide_shorts="true"]
