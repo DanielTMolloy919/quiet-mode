@@ -5,7 +5,8 @@ A browser extension that helps you focus by hiding distracting elements on YouTu
 ## Features
 
 - 🎯 **Granular Control**: 26+ individual options to customize your YouTube experience
-- 🌙 **Dark Mode**: Beautiful UI with light/dark theme support
+- 🌿 **Calming Design**: Modern UI with soothing green color palette inspired by focus and tranquility
+- 🌙 **Dark Mode**: Beautiful theme switcher with optimized light and dark modes
 - ⚡ **Fast & Lightweight**: Instant hiding with static CSS rules
 - 🎬 **Advanced Controls**: Disable autoplay, hide annotations, and manage video cards
 - 🦊 **Cross-Browser**: Works on Chrome, Firefox, and other browsers
@@ -157,9 +158,18 @@ quiet-mode/
 - **WXT**: Modern web extension framework
 - **React**: UI library
 - **TypeScript**: Type safety
-- **Tailwind CSS**: Styling
+- **Tailwind CSS**: Styling with custom color palette
 - **Shadcn UI**: Component library
 - **Radix UI**: Accessible primitives
+
+## Design
+
+Quiet Mode features a calming green color palette (#48BB78) inspired by tranquility and focus. The concentric circle logo represents the ripple effect of quieting digital distractions. The design emphasizes:
+
+- **Clarity**: Clean, organized interface with grouped settings
+- **Focus**: Subtle green accents that promote calm
+- **Accessibility**: High contrast ratios in both light and dark modes
+- **Modern aesthetics**: Gradient backgrounds, smooth transitions, and refined typography
 
 ## License
 

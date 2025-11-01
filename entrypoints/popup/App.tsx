@@ -210,8 +210,15 @@ export default function Popup() {
   if (!settings) {
     return (
       <ThemeProvider>
-        <div className="w-[400px] h-[500px] flex items-center justify-center">
-          <p>Loading...</p>
+        <div className="w-[400px] h-[500px] flex flex-col items-center justify-center bg-background">
+          <div className="w-16 h-16 mb-4 animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
+              <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.3" className="text-primary"/>
+              <circle cx="40" cy="40" r="18" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.7" className="text-primary"/>
+              <circle cx="40" cy="40" r="6" fill="currentColor" className="text-primary"/>
+            </svg>
+          </div>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </ThemeProvider>
     );
@@ -234,32 +241,43 @@ export default function Popup() {
 
   return (
     <ThemeProvider>
-      <div className="w-[400px] h-[550px] flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h1 className="text-xl font-semibold">Quiet Mode</h1>
+      <div className="w-[400px] h-[550px] flex flex-col bg-background">
+        {/* Header with gradient background */}
+        <div className="flex items-center justify-between p-4 border-b bg-gradient-to-br from-primary/5 to-primary/10">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
+                <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.3" className="text-primary"/>
+                <circle cx="40" cy="40" r="18" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.7" className="text-primary"/>
+                <circle cx="40" cy="40" r="6" fill="currentColor" className="text-primary"/>
+              </svg>
+            </div>
+            <h1 className="text-xl font-semibold text-foreground">Quiet Mode</h1>
+          </div>
           <ModeToggle />
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 bg-background">
           <div className="space-y-6">
             {Object.entries(groupedSettings).map(
               ([category, categorySettings]) => (
-                <div key={category}>
-                  <h2 className="text-sm font-semibold text-muted-foreground mb-3">
+                <div key={category} className="space-y-3">
+                  <h2 className="text-sm font-semibold text-primary/80 mb-3 uppercase tracking-wide">
                     {category}
                   </h2>
                   <div className="space-y-2">
                     {categorySettings.map((setting) => {
                       const settingKey = `youtube.${setting.id}`;
                       return (
-                        <SettingSwitch
-                          key={settingKey}
-                          displayName={setting.displayName}
-                          checked={settings[settingKey] ?? false}
-                          setChecked={(value) =>
-                            setSettings({ ...settings, [settingKey]: value })
-                          }
-                        />
+                        <div key={settingKey} className="p-2 rounded-lg hover:bg-accent/50 transition-colors">
+                          <SettingSwitch
+                            displayName={setting.displayName}
+                            checked={settings[settingKey] ?? false}
+                            setChecked={(value) =>
+                              setSettings({ ...settings, [settingKey]: value })
+                            }
+                          />
+                        </div>
                       );
                     })}
                   </div>
@@ -269,14 +287,14 @@ export default function Popup() {
           </div>
         </div>
 
-        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t">
+        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t bg-gradient-to-br from-primary/5 to-primary/10">
           <span className="text-muted-foreground">v1.0.0</span>
           <span className="text-muted-foreground">•</span>
           <button
             onClick={() =>
               openLink("https://github.com/dannymolloy/quiet-mode")
             }
-            className="hover:underline text-muted-foreground"
+            className="hover:underline text-primary hover:text-primary/80 transition-colors font-medium"
           >
             GitHub
           </button>
