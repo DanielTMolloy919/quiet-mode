@@ -294,27 +294,13 @@ export default function Popup() {
                         if (isDisabled) return;
 
                         const newValue = !isChecked;
-                        const newSettings = {
-                          ...settings,
-                          [settingKey]: newValue,
-                        };
-
-                        // If this is a parent setting, toggle all children
-                        if (setting.children && newValue) {
-                          setting.children.forEach((childId) => {
-                            newSettings[`youtube.${childId}`] = true;
-                          });
-                        }
-
-                        setSettings(newSettings);
+                        setSettings({ ...settings, [settingKey]: newValue });
                       };
 
                       return (
                         <div
                           key={settingKey}
                           className={`p-2 rounded-lg transition-colors ${
-                            isChild ? "ml-6 border-l-2 border-primary/30" : ""
-                          } ${
                             isDisabled
                               ? "opacity-50 cursor-not-allowed"
                               : "hover:bg-accent/50 cursor-pointer"
