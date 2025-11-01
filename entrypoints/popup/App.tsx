@@ -178,9 +178,8 @@ export default function Popup() {
         <div className="w-[400px] h-[500px] flex flex-col items-center justify-center bg-background">
           <div className="w-16 h-16 mb-4 animate-pulse">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
-              <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.3" className="text-primary"/>
-              <circle cx="40" cy="40" r="18" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.7" className="text-primary"/>
-              <circle cx="40" cy="40" r="6" fill="currentColor" className="text-primary"/>
+              <circle cx="40" cy="40" r="8" fill="currentColor" className="text-primary"/>
+              <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" strokeWidth="10" opacity="0.5" className="text-primary"/>
             </svg>
           </div>
           <p className="text-muted-foreground">Loading...</p>
@@ -212,9 +211,8 @@ export default function Popup() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 flex-shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
-                <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.3" className="text-primary"/>
-                <circle cx="40" cy="40" r="18" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.7" className="text-primary"/>
-                <circle cx="40" cy="40" r="6" fill="currentColor" className="text-primary"/>
+                <circle cx="40" cy="40" r="8" fill="currentColor" className="text-primary"/>
+                <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" strokeWidth="10" opacity="0.5" className="text-primary"/>
               </svg>
             </div>
             <h1 className="text-xl font-semibold text-foreground">Quiet Mode</h1>

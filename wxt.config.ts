@@ -17,6 +17,13 @@ export default defineConfig({
         id: "quiet-mode@danielmolloy.dev",
       },
     },
+    icons: {
+      16: "/icon.svg",
+      32: "/icon.svg",
+      48: "/icon.svg",
+      96: "/icon.svg",
+      128: "/icon.svg",
+    },
   },
   vite: () => ({
     plugins: [tailwindcss()],
