@@ -4,11 +4,11 @@ A browser extension that helps you focus by hiding distracting elements on YouTu
 
 ## Features
 
-- 🎯 **Granular Control**: 26+ individual options to customize your YouTube experience
+- 🎯 **Granular Control**: 15 focused options to customize your YouTube experience
 - 🌿 **Calming Design**: Modern UI with soothing green color palette inspired by focus and tranquility
 - 🌙 **Dark Mode**: Beautiful theme switcher with optimized light and dark modes
 - ⚡ **Fast & Lightweight**: Instant hiding with static CSS rules
-- 🎬 **Advanced Controls**: Disable autoplay, hide annotations, and manage video cards
+- 🎬 **Advanced Controls**: Disable autoplay and hide distracting elements
 - 🦊 **Cross-Browser**: Works on Chrome, Firefox, and other browsers
 
 ## Installation
@@ -57,26 +57,6 @@ Quiet Mode offers comprehensive control over YouTube's interface:
 - Hide Channel Info
 - Hide Video Metadata
 - Hide Action Bar (Like/Share)
-
-### Player
-
-- Hide Annotations
-- Hide Cards
-- Hide Live Chat
-
-### Content Filtering
-
-- Hide Mixes
-- Hide Playlists
-- Hide Merchandise
-- Hide Donation Shelf
-
-### Other Options
-
-- Hide Search Suggestions
-- Hide Profile Pictures (Comments)
-- Hide "More from YouTube"
-- Redirect Home to Subscriptions
 
 ## Development
 

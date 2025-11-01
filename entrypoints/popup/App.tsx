@@ -87,41 +87,6 @@ const YOUTUBE_SETTINGS: SettingConfig[] = [
     displayName: "Hide Action Bar (Like/Share)",
     category: "Video Info",
   },
-  {
-    id: "hide_annotations",
-    displayName: "Hide Annotations",
-    category: "Player",
-  },
-  { id: "hide_cards", displayName: "Hide Cards", category: "Player" },
-  { id: "hide_chat", displayName: "Hide Live Chat", category: "Player" },
-  { id: "hide_mix", displayName: "Hide Mixes", category: "Content" },
-  { id: "hide_playlists", displayName: "Hide Playlists", category: "Content" },
-  { id: "hide_merch", displayName: "Hide Merchandise", category: "Content" },
-  {
-    id: "hide_donate",
-    displayName: "Hide Donation Shelf",
-    category: "Content",
-  },
-  {
-    id: "hide_search",
-    displayName: "Hide Search Suggestions",
-    category: "Other",
-  },
-  {
-    id: "hide_prof",
-    displayName: "Hide Profile Pictures (Comments)",
-    category: "Other",
-  },
-  {
-    id: "hide_moreyt",
-    displayName: "Hide More from YouTube",
-    category: "Other",
-  },
-  {
-    id: "hide_redirect_home",
-    displayName: "Redirect Home to Subs",
-    category: "Other",
-  },
 ];
 
 type SettingSwitchProps = {
