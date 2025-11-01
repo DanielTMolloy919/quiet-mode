@@ -3,7 +3,7 @@ import {
   initializeBehaviors,
   watchAttributeChanges,
 } from "./youtube-behaviors";
-import "./content.css";
+import contentCss from "./content.css?inline";
 
 interface Settings {
   [key: string]: boolean;
@@ -12,11 +12,26 @@ interface Settings {
 let settings: Settings | null = null;
 let isRunning = false;
 
+// Inject CSS into page
+function injectCSS() {
+  const style = document.createElement("style");
+  style.id = "quiet-mode-styles";
+  style.textContent = contentCss;
+  document.head.appendChild(style);
+  console.log("[QuietMode:Content] CSS injected");
+}
+
 export default defineContentScript({
   matches: ["*://*.youtube.com/*"],
-  cssInjectionMode: "ui",
   main() {
     console.log("[QuietMode:Content] Content script initialized");
+
+    // Inject CSS immediately
+    if (document.head) {
+      injectCSS();
+    } else {
+      document.addEventListener("DOMContentLoaded", injectCSS);
+    }
 
     // Prevent duplicate initialization
     if ((document as any).quietModeRunning) {
@@ -108,7 +123,8 @@ function setupEventListeners() {
       if (settings) {
         for (const key in newSettings) {
           if (newSettings[key] !== settings[key]) {
-            const attrName = key.replace(".", "_");
+            // Convert "youtube.hide_feed" to "hide_feed"
+            const attrName = key.replace("youtube.", "");
             if (newSettings[key]) {
               document.documentElement.setAttribute(attrName, "true");
             } else {
@@ -124,26 +140,40 @@ function setupEventListeners() {
 }
 
 function applySettings(settings: Settings | null) {
-  if (!settings) return;
+  if (!settings) {
+    console.log("[QuietMode:Content] No settings to apply");
+    return;
+  }
 
-  console.log("[QuietMode:Content] Applying settings to HTML attributes");
+  console.log(
+    "[QuietMode:Content] Applying settings to HTML attributes:",
+    settings
+  );
 
   // Clear all existing attributes
   const allAttributes = Object.keys(generateDefaultSettings());
   for (const key of allAttributes) {
-    const attrName = key.replace(".", "_");
+    const attrName = key.replace("youtube.", "");
     document.documentElement.removeAttribute(attrName);
   }
 
   // Apply enabled settings as HTML attributes
+  let enabledCount = 0;
   for (const [key, value] of Object.entries(settings)) {
     if (value) {
       // Convert setting key to attribute name (e.g., "youtube.hide_feed" -> "hide_feed")
       const attrName = key.replace("youtube.", "");
       document.documentElement.setAttribute(attrName, "true");
-      console.log(`[QuietMode:Content] Set attribute: ${attrName}=true`);
+      console.log(`[QuietMode:Content] ✓ Set attribute: ${attrName}="true"`);
+      enabledCount++;
     }
   }
+
+  console.log(`[QuietMode:Content] Applied ${enabledCount} enabled settings`);
+  console.log(
+    "[QuietMode:Content] HTML element attributes:",
+    document.documentElement.attributes
+  );
 }
 
 function generateDefaultSettings(): Settings {
