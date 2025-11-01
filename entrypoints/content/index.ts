@@ -120,13 +120,27 @@ function setupEventListeners() {
     if (changes.settings?.newValue) {
       const newSettings = changes.settings.newValue;
 
+      // If global toggle changed, re-apply all settings
+      if (settings && newSettings["global.enabled"] !== settings["global.enabled"]) {
+        console.log("[QuietMode:Content] Global toggle changed, re-applying all settings");
+        settings = newSettings;
+        applySettings(settings);
+        return;
+      }
+
       // Check what changed and update only those attributes
       if (settings) {
+        const globalEnabled = newSettings["global.enabled"] !== false;
+        
         for (const key in newSettings) {
+          if (key === "global.enabled") continue; // Skip global toggle
+          
           if (newSettings[key] !== settings[key]) {
             // Convert "youtube.hide_feed" to "hide_feed"
             const attrName = key.replace("youtube.", "");
-            if (newSettings[key]) {
+            
+            // Only apply if globally enabled
+            if (globalEnabled && newSettings[key]) {
               document.documentElement.setAttribute(attrName, "true");
             } else {
               document.documentElement.removeAttribute(attrName);
@@ -154,13 +168,22 @@ function applySettings(settings: Settings | null) {
   // Clear all existing attributes
   const allAttributes = Object.keys(generateDefaultSettings());
   for (const key of allAttributes) {
-    const attrName = key.replace("youtube.", "");
+    const attrName = key.replace("youtube.", "").replace("global.", "");
     document.documentElement.removeAttribute(attrName);
+  }
+
+  // Check if globally enabled
+  const globalEnabled = settings["global.enabled"] !== false;
+  if (!globalEnabled) {
+    console.log("[QuietMode:Content] Global toggle is OFF - skipping all settings");
+    return;
   }
 
   // Apply enabled settings as HTML attributes
   let enabledCount = 0;
   for (const [key, value] of Object.entries(settings)) {
+    if (key === "global.enabled") continue; // Skip the global toggle itself
+    
     if (value) {
       // Convert setting key to attribute name (e.g., "youtube.hide_feed" -> "hide_feed")
       const attrName = key.replace("youtube.", "");

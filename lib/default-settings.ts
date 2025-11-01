@@ -4,6 +4,7 @@
  */
 export function generateDefaultSettings(): Record<string, boolean> {
   return {
+    "global.enabled": true,
     "youtube.hide_autoplay": true,
     "youtube.hide_bar": false,
     "youtube.hide_channel": false,

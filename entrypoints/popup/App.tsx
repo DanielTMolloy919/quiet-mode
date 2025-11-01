@@ -245,6 +245,8 @@ export default function Popup() {
     groupedSettings[category].push(setting);
   }
 
+  const globalEnabled = settings["global.enabled"] !== false;
+
   return (
     <ThemeProvider>
       <div className="w-[400px] h-[550px] flex flex-col bg-background">
@@ -283,8 +285,27 @@ export default function Popup() {
           <ModeToggle />
         </div>
 
+        {/* Global Toggle */}
+        <div className="p-4 border-b bg-accent/30">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <Label className="text-base font-semibold cursor-pointer" onClick={() => setSettings({ ...settings, "global.enabled": !globalEnabled })}>
+                Enable Quiet Mode
+              </Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                {globalEnabled ? "All features active" : "All features disabled"}
+              </p>
+            </div>
+            <Switch
+              checked={globalEnabled}
+              onCheckedChange={(checked) => setSettings({ ...settings, "global.enabled": checked })}
+              className="scale-125"
+            />
+          </div>
+        </div>
+
         <div className="flex-1 overflow-y-auto p-4 bg-background">
-          <div className="space-y-6">
+          <div className={`space-y-6 transition-opacity ${!globalEnabled ? "opacity-40" : ""}`}>
             {Object.entries(groupedSettings).map(
               ([category, categorySettings]) => (
                 <div key={category} className="space-y-3">
@@ -301,7 +322,7 @@ export default function Popup() {
                       const isParentEnabled = parentKey
                         ? settings[parentKey] ?? false
                         : false;
-                      const isDisabled = isChild && isParentEnabled;
+                      const isDisabled = (isChild && isParentEnabled) || !globalEnabled;
                       const isChecked = settings[settingKey] ?? false;
 
                       const handleToggle = () => {
