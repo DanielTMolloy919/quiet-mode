@@ -137,7 +137,7 @@ function SettingSwitch({
 }: SettingSwitchProps) {
   return (
     <div className="flex items-center gap-2 justify-between">
-      <Label className="cursor-pointer" onClick={() => setChecked(!checked)}>
+      <Label className="flex-1 cursor-pointer" onClick={() => setChecked(!checked)}>
         {displayName}
       </Label>
       <Switch onCheckedChange={setChecked} checked={checked} />
@@ -269,7 +269,11 @@ export default function Popup() {
                     {categorySettings.map((setting) => {
                       const settingKey = `youtube.${setting.id}`;
                       return (
-                        <div key={settingKey} className="p-2 rounded-lg hover:bg-accent/50 transition-colors">
+                        <div 
+                          key={settingKey} 
+                          className="p-2 rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
+                          onClick={() => setSettings({ ...settings, [settingKey]: !(settings[settingKey] ?? false) })}
+                        >
                           <SettingSwitch
                             displayName={setting.displayName}
                             checked={settings[settingKey] ?? false}
