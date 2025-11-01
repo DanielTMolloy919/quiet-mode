@@ -210,7 +210,7 @@ export default function Popup() {
                 cy="40"
                 r="8"
                 fill="currentColor"
-                className="text-primary"
+                className="text-muted-foreground"
               />
               <circle
                 cx="40"
@@ -220,7 +220,7 @@ export default function Popup() {
                 stroke="currentColor"
                 strokeWidth="10"
                 opacity="0.5"
-                className="text-primary"
+                className="text-muted-foreground"
               />
             </svg>
           </div>
@@ -248,8 +248,8 @@ export default function Popup() {
   return (
     <ThemeProvider>
       <div className="w-[400px] h-[550px] flex flex-col bg-background">
-        {/* Header with gradient background */}
-        <div className="flex items-center justify-between p-4 border-b bg-linear-to-br from-primary/5 to-primary/10">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 shrink-0">
               <svg
@@ -288,7 +288,7 @@ export default function Popup() {
             {Object.entries(groupedSettings).map(
               ([category, categorySettings]) => (
                 <div key={category} className="space-y-3">
-                  <h2 className="text-sm font-semibold text-primary/80 mb-3 uppercase tracking-wide">
+                  <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">
                     {category}
                   </h2>
                   <div className="space-y-2">
@@ -338,14 +338,14 @@ export default function Popup() {
           </div>
         </div>
 
-        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t bg-linear-to-br from-primary/5 to-primary/10">
+        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t">
           <span className="text-muted-foreground">v1.0.0</span>
           <span className="text-muted-foreground">•</span>
           <button
             onClick={() =>
               openLink("https://github.com/dannymolloy/quiet-mode")
             }
-            className="hover:underline text-primary hover:text-primary/80 transition-colors font-medium"
+            className="hover:underline text-foreground hover:text-muted-foreground transition-colors"
           >
             GitHub
           </button>
