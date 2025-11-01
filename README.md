@@ -10,21 +10,43 @@ A browser extension that helps you focus by hiding distracting feeds and suggest
 - ⚡ **Fast & Lightweight**: Instant blocking with no flickering
 - 🦊 **Cross-Browser**: Works on Chrome, Firefox, and other browsers
 
+## Installation
+
+### Chrome/Edge
+
+1. Build the extension: `pnpm build`
+2. Open `chrome://extensions/` in your browser
+3. Enable "Developer mode" (toggle in top right)
+4. Click "Load unpacked"
+5. Select the `.output/chrome-mv3` folder
+
+### Firefox
+
+1. Build for Firefox: `pnpm build:firefox`
+2. Open `about:debugging#/runtime/this-firefox` in your browser
+3. Click "Load Temporary Add-on"
+4. Navigate to the `.output/firefox-mv2` folder and select `manifest.json`
+
+> **Note**: In Firefox, temporary extensions are removed when you close the browser. For permanent installation during development, you can use [web-ext](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/) or package the extension as an XPI file.
+
 ## Supported Sites
 
 ### YouTube
+
 - Hide Home Feed
 - Hide Channel Feeds
 - Hide Sidebar
 - Hide Suggested Videos
 
 ### Reddit
+
 - Hide Home Feed
 - Hide Subreddit Feeds
 - Hide Sidebar
 - Hide Suggested Posts
 
 ### Instagram
+
 - Hide Home Feed
 - Hide Reels
 
@@ -73,17 +95,20 @@ quiet-mode/
 ## How It Works
 
 1. **Background Script** (`background.ts`):
+
    - Fetches configuration from remote JSON file
    - Caches config locally (1-hour cache duration)
    - Responds to messages from popup and content scripts
 
 2. **Content Script** (`content.ts`):
+
    - Loads user settings and remote config
    - Sets HTML attributes based on active rules
    - Listens for URL changes (handles SPAs)
    - Updates in real-time when settings change
 
 3. **Popup** (`popup/App.tsx`):
+
    - Provides user interface for toggling features
    - Syncs settings across browser tabs
    - Theme switcher for dark/light mode
@@ -95,6 +120,7 @@ quiet-mode/
 ## Remote Configuration
 
 The extension fetches its configuration from:
+
 ```
 https://raw.githubusercontent.com/DanielTMolloy919/quiet-mode-config/refs/heads/main/config.json
 ```
