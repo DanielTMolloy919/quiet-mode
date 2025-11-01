@@ -24,6 +24,8 @@ interface SettingConfig {
   id: string;
   displayName: string;
   category?: string;
+  parent?: string; // ID of parent setting
+  children?: string[]; // IDs of child settings
 }
 
 // YouTube settings configuration
@@ -68,24 +70,28 @@ const YOUTUBE_SETTINGS: SettingConfig[] = [
     category: "Watch Page",
   },
   {
+    id: "hide_meta",
+    displayName: "Hide Video Metadata",
+    category: "Video Info",
+    children: ["hide_desc", "hide_channel", "hide_bar"],
+  },
+  {
     id: "hide_desc",
     displayName: "Hide Video Description",
     category: "Video Info",
+    parent: "hide_meta",
   },
   {
     id: "hide_channel",
     displayName: "Hide Channel Info",
     category: "Video Info",
-  },
-  {
-    id: "hide_meta",
-    displayName: "Hide Video Metadata",
-    category: "Video Info",
+    parent: "hide_meta",
   },
   {
     id: "hide_bar",
     displayName: "Hide Action Bar (Like/Share)",
     category: "Video Info",
+    parent: "hide_meta",
   },
 ];
 
@@ -102,7 +108,10 @@ function SettingSwitch({
 }: SettingSwitchProps) {
   return (
     <div className="flex items-center gap-2 justify-between">
-      <Label className="flex-1 cursor-pointer" onClick={() => setChecked(!checked)}>
+      <Label
+        className="flex-1 cursor-pointer"
+        onClick={() => setChecked(!checked)}
+      >
         {displayName}
       </Label>
       <Switch onCheckedChange={setChecked} checked={checked} />
@@ -177,9 +186,28 @@ export default function Popup() {
       <ThemeProvider>
         <div className="w-[400px] h-[500px] flex flex-col items-center justify-center bg-background">
           <div className="w-16 h-16 mb-4 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
-              <circle cx="40" cy="40" r="8" fill="currentColor" className="text-primary"/>
-              <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" strokeWidth="10" opacity="0.5" className="text-primary"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 80 80"
+              className="w-full h-full"
+            >
+              <circle
+                cx="40"
+                cy="40"
+                r="8"
+                fill="currentColor"
+                className="text-primary"
+              />
+              <circle
+                cx="40"
+                cy="40"
+                r="22"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="10"
+                opacity="0.5"
+                className="text-primary"
+              />
             </svg>
           </div>
           <p className="text-muted-foreground">Loading...</p>
@@ -207,15 +235,36 @@ export default function Popup() {
     <ThemeProvider>
       <div className="w-[400px] h-[550px] flex flex-col bg-background">
         {/* Header with gradient background */}
-        <div className="flex items-center justify-between p-4 border-b bg-gradient-to-br from-primary/5 to-primary/10">
+        <div className="flex items-center justify-between p-4 border-b bg-linear-to-br from-primary/5 to-primary/10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="w-full h-full">
-                <circle cx="40" cy="40" r="8" fill="currentColor" className="text-primary"/>
-                <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" strokeWidth="10" opacity="0.5" className="text-primary"/>
+            <div className="w-8 h-8 shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 80 80"
+                className="w-full h-full"
+              >
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="8"
+                  fill="currentColor"
+                  className="text-primary"
+                />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="10"
+                  opacity="0.5"
+                  className="text-primary"
+                />
               </svg>
             </div>
-            <h1 className="text-xl font-semibold text-foreground">Quiet Mode</h1>
+            <h1 className="text-xl font-semibold text-foreground">
+              Quiet Mode
+            </h1>
           </div>
           <ModeToggle />
         </div>
@@ -231,18 +280,51 @@ export default function Popup() {
                   <div className="space-y-2">
                     {categorySettings.map((setting) => {
                       const settingKey = `youtube.${setting.id}`;
+                      const isChild = !!setting.parent;
+                      const parentKey = setting.parent
+                        ? `youtube.${setting.parent}`
+                        : null;
+                      const isParentEnabled = parentKey
+                        ? settings[parentKey] ?? false
+                        : false;
+                      const isDisabled = isChild && isParentEnabled;
+                      const isChecked = settings[settingKey] ?? false;
+
+                      const handleToggle = () => {
+                        if (isDisabled) return;
+
+                        const newValue = !isChecked;
+                        const newSettings = {
+                          ...settings,
+                          [settingKey]: newValue,
+                        };
+
+                        // If this is a parent setting, toggle all children
+                        if (setting.children && newValue) {
+                          setting.children.forEach((childId) => {
+                            newSettings[`youtube.${childId}`] = true;
+                          });
+                        }
+
+                        setSettings(newSettings);
+                      };
+
                       return (
-                        <div 
-                          key={settingKey} 
-                          className="p-2 rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
-                          onClick={() => setSettings({ ...settings, [settingKey]: !(settings[settingKey] ?? false) })}
+                        <div
+                          key={settingKey}
+                          className={`p-2 rounded-lg transition-colors ${
+                            isChild ? "ml-6 border-l-2 border-primary/30" : ""
+                          } ${
+                            isDisabled
+                              ? "opacity-50 cursor-not-allowed"
+                              : "hover:bg-accent/50 cursor-pointer"
+                          }`}
+                          onClick={handleToggle}
                         >
                           <SettingSwitch
                             displayName={setting.displayName}
-                            checked={settings[settingKey] ?? false}
-                            setChecked={(value) =>
-                              setSettings({ ...settings, [settingKey]: value })
-                            }
+                            checked={isChecked || isDisabled}
+                            setChecked={() => handleToggle()}
                           />
                         </div>
                       );
@@ -254,7 +336,7 @@ export default function Popup() {
           </div>
         </div>
 
-        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t bg-gradient-to-br from-primary/5 to-primary/10">
+        <div className="flex gap-2 justify-center items-center text-sm p-3 border-t bg-linear-to-br from-primary/5 to-primary/10">
           <span className="text-muted-foreground">v1.0.0</span>
           <span className="text-muted-foreground">•</span>
           <button
