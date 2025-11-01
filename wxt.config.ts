@@ -7,13 +7,10 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
     name: "Quiet Mode",
-    description: "Hide distracting feeds and suggestions on social media sites",
-    permissions: ["storage", "tabs"],
+    description: "YouTube distraction blocker - hide feeds, shorts, recommendations, and more",
+    permissions: ["storage"],
     host_permissions: [
       "*://*.youtube.com/*",
-      "*://*.reddit.com/*",
-      "*://*.instagram.com/*",
-      "https://raw.githubusercontent.com/*",
     ],
     browser_specific_settings: {
       gecko: {

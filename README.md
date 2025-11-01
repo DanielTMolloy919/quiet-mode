@@ -1,13 +1,13 @@
 # Quiet Mode
 
-A browser extension that helps you focus by hiding distracting feeds and suggestions on social media sites like YouTube, Reddit, and Instagram.
+A browser extension that helps you focus by hiding distracting elements on YouTube. Hide feeds, recommendations, shorts, comments, and much more with granular control.
 
 ## Features
 
-- 🎯 **Granular Control**: Toggle individual features on/off for each site
+- 🎯 **Granular Control**: 26+ individual options to customize your YouTube experience
 - 🌙 **Dark Mode**: Beautiful UI with light/dark theme support
-- 🔄 **Auto-Updates**: Remote configuration updates without extension updates
-- ⚡ **Fast & Lightweight**: Instant blocking with no flickering
+- ⚡ **Fast & Lightweight**: Instant hiding with static CSS rules
+- 🎬 **Advanced Controls**: Disable autoplay, hide annotations, and manage video cards
 - 🦊 **Cross-Browser**: Works on Chrome, Firefox, and other browsers
 
 ## Installation
@@ -29,26 +29,53 @@ A browser extension that helps you focus by hiding distracting feeds and suggest
 
 > **Note**: In Firefox, temporary extensions are removed when you close the browser. For permanent installation during development, you can use [web-ext](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/) or package the extension as an XPI file.
 
-## Supported Sites
+## YouTube Features
 
-### YouTube
+Quiet Mode offers comprehensive control over YouTube's interface:
 
-- Hide Home Feed
-- Hide Channel Feeds
-- Hide Sidebar
-- Hide Suggested Videos
+### Navigation
 
-### Reddit
+- Hide Feed (Homepage)
+- Hide Shorts
+- Hide Trending
+- Hide Subscriptions
+- Hide Header Bar
+- Hide Notifications
 
-- Hide Home Feed
-- Hide Subreddit Feeds
-- Hide Sidebar
-- Hide Suggested Posts
+### Watch Page
 
-### Instagram
+- Hide Recommended Videos
+- Hide Right Sidebar
+- Hide Comments
+- Hide End Screen
+- Disable Autoplay
 
-- Hide Home Feed
-- Hide Reels
+### Video Info
+
+- Hide Video Description
+- Hide Channel Info
+- Hide Video Metadata
+- Hide Action Bar (Like/Share)
+
+### Player
+
+- Hide Annotations
+- Hide Cards
+- Hide Live Chat
+
+### Content Filtering
+
+- Hide Mixes
+- Hide Playlists
+- Hide Merchandise
+- Hide Donation Shelf
+
+### Other Options
+
+- Hide Search Suggestions
+- Hide Profile Pictures (Comments)
+- Hide "More from YouTube"
+- Redirect Home to Subscriptions
 
 ## Development
 
@@ -77,55 +104,53 @@ pnpm build:firefox
 ```
 quiet-mode/
 ├── entrypoints/
-│   ├── background.ts       # Background script - fetches remote config
-│   ├── content.ts          # Content script - applies hiding rules
-│   ├── content.css         # CSS rules for hiding elements
+│   ├── background.ts              # Background script - manages settings
+│   ├── content/
+│   │   ├── index.ts               # Main content script
+│   │   ├── content.css            # Static CSS rules for hiding
+│   │   └── youtube-behaviors.ts   # YouTube-specific dynamic behaviors
 │   └── popup/
-│       ├── App.tsx         # Main popup UI
+│       ├── App.tsx                # Main popup UI
 │       ├── theme-provider.tsx
-│       ├── index.html
 │       └── *.css
-├── components/ui/          # Shadcn UI components
+├── components/ui/                 # Shadcn UI components
 ├── lib/
-│   ├── types.ts           # Shared TypeScript interfaces
+│   ├── types.ts                  # Shared TypeScript interfaces
 │   └── utils.ts
-└── wxt.config.ts          # WXT configuration
+└── wxt.config.ts                 # WXT configuration
 ```
 
 ## How It Works
 
 1. **Background Script** (`background.ts`):
 
-   - Fetches configuration from remote JSON file
-   - Caches config locally (1-hour cache duration)
-   - Responds to messages from popup and content scripts
+   - Initializes default settings on install
+   - Minimal overhead for maximum performance
 
-2. **Content Script** (`content.ts`):
+2. **Content Script** (`content/index.ts`):
 
-   - Loads user settings and remote config
-   - Sets HTML attributes based on active rules
-   - Listens for URL changes (handles SPAs)
+   - Loads user settings from storage
+   - Sets HTML attributes on `<html>` element (e.g., `hide_feed="true"`)
+   - Listens for URL changes (handles YouTube's SPA navigation)
    - Updates in real-time when settings change
 
-3. **Popup** (`popup/App.tsx`):
+3. **YouTube Behaviors** (`content/youtube-behaviors.ts`):
 
-   - Provides user interface for toggling features
-   - Syncs settings across browser tabs
-   - Theme switcher for dark/light mode
+   - Handles complex dynamic behaviors (autoplay, annotations)
+   - Uses MutationObservers to manage YouTube's dynamic DOM
+   - Cleans notification badges from page title
+   - Manages home page redirection to subscriptions
 
-4. **CSS** (`content.css`):
-   - Hides elements based on HTML attributes
+4. **Static CSS** (`content/content.css`):
+
+   - Hides elements using attribute selectors (e.g., `html[hide_feed=true] .ytd-rich-grid-renderer`)
+   - No dynamic CSS injection - instant performance
    - Uses `!important` to ensure rules apply
 
-## Remote Configuration
-
-The extension fetches its configuration from:
-
-```
-https://raw.githubusercontent.com/DanielTMolloy919/quiet-mode-config/refs/heads/main/config.json
-```
-
-This allows updating blocking rules without releasing new extension versions.
+5. **Popup** (`popup/App.tsx`):
+   - Clean, categorized interface for all settings
+   - Syncs settings across browser tabs via storage API
+   - Theme switcher for dark/light mode
 
 ## Technologies
 
@@ -142,4 +167,4 @@ MIT
 
 ## Credits
 
-Based on the Tranquilize extension concept.
+Inspired by the [Unhook](https://unhook.app/) YouTube extension approach.
