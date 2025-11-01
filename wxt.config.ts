@@ -15,6 +15,11 @@ export default defineConfig({
       "*://*.instagram.com/*",
       "https://raw.githubusercontent.com/*",
     ],
+    browser_specific_settings: {
+      gecko: {
+        id: "quiet-mode@danielmolloy.dev",
+      },
+    },
   },
   vite: () => ({
     plugins: [tailwindcss()],
