@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "./theme-provider";
+import { generateDefaultSettings } from "@/lib/default-settings";
 
 interface Settings {
   [key: string]: boolean;
@@ -52,7 +53,7 @@ const YOUTUBE_SETTINGS: SettingConfig[] = [
     id: "hide_sidebar",
     displayName: "Hide Right Sidebar",
     category: "Watch Page",
-    children: ["hide_recommended", "hide_chat", "hide_playlists"],
+    children: ["hide_recommended", "hide_playlists"],
   },
   {
     id: "hide_recommended",
@@ -61,16 +62,15 @@ const YOUTUBE_SETTINGS: SettingConfig[] = [
     parent: "hide_sidebar",
   },
   {
-    id: "hide_chat",
-    displayName: "Hide Live Chat",
-    category: "Watch Page",
-    parent: "hide_sidebar",
-  },
-  {
     id: "hide_playlists",
     displayName: "Hide Playlists",
     category: "Watch Page",
     parent: "hide_sidebar",
+  },
+  {
+    id: "hide_chat",
+    displayName: "Hide Live Chat",
+    category: "Watch Page",
   },
   { id: "hide_comments", displayName: "Hide Comments", category: "Watch Page" },
   {
@@ -353,12 +353,4 @@ export default function Popup() {
       </div>
     </ThemeProvider>
   );
-}
-
-function generateDefaultSettings(): Settings {
-  const settings: Settings = {};
-  for (const setting of YOUTUBE_SETTINGS) {
-    settings[`youtube.${setting.id}`] = false;
-  }
-  return settings;
 }

@@ -4,7 +4,7 @@ A browser extension that helps you focus by hiding distracting elements on YouTu
 
 ## Features
 
-- 🎯 **Granular Control**: 17 focused options to customize your YouTube experience
+- 🎯 **Granular Control**: 16 focused options to customize your YouTube experience
 - 🌿 **Calming Design**: Modern UI with soothing green color palette inspired by focus and tranquility
 - 🌙 **Dark Mode**: Beautiful theme switcher with optimized light and dark modes
 - ⚡ **Fast & Lightweight**: Instant hiding with static CSS rules
@@ -47,8 +47,8 @@ Quiet Mode offers comprehensive control over YouTube's interface:
 
 - Hide Right Sidebar
   - Hide Recommended Videos
-  - Hide Live Chat
   - Hide Playlists
+- Hide Live Chat
 - Hide Comments
 - Hide End Screen
 - Disable Autoplay
