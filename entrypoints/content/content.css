@@ -167,3 +167,9 @@ html[hide_shorts="true"]
   ytm-video-with-context-renderer:has(a[href*="/shorts/"]) {
   display: none !important;
 }
+
+/* Blocked channel pages - hides entire channel content */
+html[blocked_channel="true"] ytd-browse ytd-c4-tabbed-header-renderer,
+html[blocked_channel="true"] ytd-browse #contents {
+  display: none !important;
+}

@@ -1,8 +1,10 @@
+import type { Settings } from "./types";
+
 /**
  * Default settings for Quiet Mode
  * Shared between background script and content script
  */
-export function generateDefaultSettings(): Record<string, boolean> {
+export function generateDefaultSettings(): Settings {
   return {
     "global.enabled": true,
     "youtube.hide_autoplay": true,
@@ -21,5 +23,6 @@ export function generateDefaultSettings(): Record<string, boolean> {
     "youtube.hide_sidebar": false,
     "youtube.hide_subs": false,
     "youtube.hide_trending": true,
+    "youtube.blocked_channels": [],
   };
 }

@@ -5,13 +5,41 @@ import {
 } from "./youtube-behaviors";
 import contentCss from "./content.css?inline";
 import { generateDefaultSettings } from "@/lib/default-settings";
-
-interface Settings {
-  [key: string]: boolean;
-}
+import { extractChannelFromUrl, channelIdsMatch } from "@/lib/utils";
+import type { Settings } from "@/lib/types";
 
 let settings: Settings | null = null;
 let isRunning = false;
+
+/**
+ * Check if current page is a blocked channel and update the attribute
+ */
+function checkBlockedChannel() {
+  if (!settings) return;
+  
+  const globalEnabled = settings["global.enabled"] !== false;
+  const blockedChannels = (settings["youtube.blocked_channels"] as string[]) || [];
+  
+  // Get current channel from URL
+  const currentChannel = extractChannelFromUrl(window.location.pathname);
+  
+  if (!globalEnabled || !currentChannel || blockedChannels.length === 0) {
+    document.documentElement.removeAttribute("blocked_channel");
+    return;
+  }
+  
+  // Check if current channel is in blocked list
+  const isBlocked = blockedChannels.some(blockedId => 
+    channelIdsMatch(currentChannel, blockedId)
+  );
+  
+  if (isBlocked) {
+    document.documentElement.setAttribute("blocked_channel", "true");
+    console.log(`[QuietMode:Content] Blocked channel detected: ${currentChannel}`);
+  } else {
+    document.documentElement.removeAttribute("blocked_channel");
+  }
+}
 
 // Inject CSS into page
 function injectCSS() {
@@ -74,6 +102,9 @@ async function init() {
     // Apply settings to HTML attributes
     applySettings(settings);
 
+    // Check if current page is a blocked channel
+    checkBlockedChannel();
+
     // Setup event listeners
     setupEventListeners();
 
@@ -96,21 +127,25 @@ function setupEventListeners() {
   // Listen for YouTube SPA navigation events
   window.addEventListener("load", () => {
     console.log("[QuietMode:Content] Page loaded");
+    checkBlockedChannel();
     initializeBehaviors(1);
   });
 
   window.addEventListener("yt-page-data-updated", () => {
     console.log("[QuietMode:Content] YouTube page updated");
+    checkBlockedChannel();
     initializeBehaviors();
   });
 
   window.addEventListener("state-navigateend", () => {
     console.log("[QuietMode:Content] YouTube navigation ended");
+    checkBlockedChannel();
     initializeBehaviors(2);
   });
 
   // Handle page load completion
   if (document.readyState === "complete") {
+    checkBlockedChannel();
     initializeBehaviors(1);
   }
 
@@ -125,15 +160,21 @@ function setupEventListeners() {
         console.log("[QuietMode:Content] Global toggle changed, re-applying all settings");
         settings = newSettings;
         applySettings(settings);
+        checkBlockedChannel();
         return;
       }
+
+      // Check if blocked_channels changed
+      const oldBlockedChannels = (settings?.["youtube.blocked_channels"] as string[]) || [];
+      const newBlockedChannels = (newSettings["youtube.blocked_channels"] as string[]) || [];
+      const blockedChannelsChanged = JSON.stringify(oldBlockedChannels) !== JSON.stringify(newBlockedChannels);
 
       // Check what changed and update only those attributes
       if (settings) {
         const globalEnabled = newSettings["global.enabled"] !== false;
         
         for (const key in newSettings) {
-          if (key === "global.enabled") continue; // Skip global toggle
+          if (key === "global.enabled" || key === "youtube.blocked_channels") continue;
           
           if (newSettings[key] !== settings[key]) {
             // Convert "youtube.hide_feed" to "hide_feed"
@@ -150,6 +191,12 @@ function setupEventListeners() {
       }
 
       settings = newSettings;
+
+      // Re-check blocked channel if the list changed
+      if (blockedChannelsChanged) {
+        console.log("[QuietMode:Content] Blocked channels changed, re-checking");
+        checkBlockedChannel();
+      }
     }
   });
 }
@@ -169,8 +216,12 @@ function applySettings(settings: Settings | null) {
   const allAttributes = Object.keys(generateDefaultSettings());
   for (const key of allAttributes) {
     const attrName = key.replace("youtube.", "").replace("global.", "");
+    // Skip blocked_channels - it's not a simple attribute
+    if (attrName === "blocked_channels") continue;
     document.documentElement.removeAttribute(attrName);
   }
+  // Also clear blocked_channel attribute
+  document.documentElement.removeAttribute("blocked_channel");
 
   // Check if globally enabled
   const globalEnabled = settings["global.enabled"] !== false;
@@ -182,7 +233,8 @@ function applySettings(settings: Settings | null) {
   // Apply enabled settings as HTML attributes
   let enabledCount = 0;
   for (const [key, value] of Object.entries(settings)) {
-    if (key === "global.enabled") continue; // Skip the global toggle itself
+    // Skip global toggle and blocked_channels (handled separately)
+    if (key === "global.enabled" || key === "youtube.blocked_channels") continue;
     
     if (value) {
       // Convert setting key to attribute name (e.g., "youtube.hide_feed" -> "hide_feed")

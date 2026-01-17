@@ -4,22 +4,22 @@ overview: Add the ability to block specific YouTube channels by making their cha
 todos:
   - id: update-types
     content: Update Settings interface in types.ts to support string arrays
-    status: pending
+    status: completed
   - id: update-defaults
     content: Add blocked_channels array to default settings
-    status: pending
+    status: completed
   - id: popup-ui
     content: Add Blocked Channels section to popup with input and list management
-    status: pending
+    status: completed
   - id: content-detection
     content: Add channel page detection logic in content script
-    status: pending
+    status: completed
   - id: content-blocking
     content: Add CSS rules to hide blocked channel page content
-    status: pending
+    status: completed
   - id: url-parsing
     content: Add utility functions to parse/normalize channel identifiers
-    status: pending
+    status: completed
 ---
 
 # YouTube Channel Blocking Feature

@@ -1,4 +1,4 @@
 export interface Settings {
-  [key: string]: boolean;
+  [key: string]: boolean | string[];
 }
 

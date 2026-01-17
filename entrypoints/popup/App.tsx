@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 import { ThemeProvider } from "./theme-provider";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, X, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "./theme-provider";
 import { generateDefaultSettings } from "@/lib/default-settings";
-
-interface Settings {
-  [key: string]: boolean;
-}
+import { extractChannelFromUrl } from "@/lib/utils";
+import type { Settings } from "@/lib/types";
 
 interface SettingConfig {
   id: string;
@@ -162,6 +160,7 @@ export function ModeToggle() {
 
 export default function Popup() {
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [newChannelInput, setNewChannelInput] = useState("");
 
   useEffect(() => {
     console.log("[QuietMode:Popup] Loading settings...");
@@ -246,6 +245,35 @@ export default function Popup() {
   }
 
   const globalEnabled = settings["global.enabled"] !== false;
+  const blockedChannels = (settings["youtube.blocked_channels"] as string[]) || [];
+
+  function addBlockedChannel() {
+    if (!newChannelInput.trim()) return;
+    
+    const channelId = extractChannelFromUrl(newChannelInput.trim());
+    if (!channelId) {
+      console.log("[QuietMode:Popup] Invalid channel input:", newChannelInput);
+      return;
+    }
+
+    // Check if already blocked
+    if (blockedChannels.some(ch => ch.toLowerCase() === channelId.toLowerCase())) {
+      console.log("[QuietMode:Popup] Channel already blocked:", channelId);
+      setNewChannelInput("");
+      return;
+    }
+
+    const newBlockedChannels = [...blockedChannels, channelId];
+    setSettings({ ...settings, "youtube.blocked_channels": newBlockedChannels });
+    setNewChannelInput("");
+    console.log("[QuietMode:Popup] Added blocked channel:", channelId);
+  }
+
+  function removeBlockedChannel(channelId: string) {
+    const newBlockedChannels = blockedChannels.filter(ch => ch !== channelId);
+    setSettings({ ...settings, "youtube.blocked_channels": newBlockedChannels });
+    console.log("[QuietMode:Popup] Removed blocked channel:", channelId);
+  }
 
   return (
     <ThemeProvider>
@@ -320,10 +348,10 @@ export default function Popup() {
                         ? `youtube.${setting.parent}`
                         : null;
                       const isParentEnabled = parentKey
-                        ? settings[parentKey] ?? false
+                        ? (settings[parentKey] as boolean) ?? false
                         : false;
                       const isDisabled = (isChild && isParentEnabled) || !globalEnabled;
-                      const isChecked = settings[settingKey] ?? false;
+                      const isChecked = (settings[settingKey] as boolean) ?? false;
 
                       const handleToggle = () => {
                         if (isDisabled) return;
@@ -356,6 +384,67 @@ export default function Popup() {
                 </div>
               )
             )}
+
+            {/* Blocked Channels Section */}
+            <div className="space-y-3">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">
+                Blocked Channels
+              </h2>
+              
+              {/* Add channel input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newChannelInput}
+                  onChange={(e) => setNewChannelInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addBlockedChannel();
+                    }
+                  }}
+                  placeholder="@channel or URL"
+                  disabled={!globalEnabled}
+                  className="flex-1 px-3 py-2 text-sm rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+                />
+                <Button
+                  size="sm"
+                  onClick={addBlockedChannel}
+                  disabled={!globalEnabled || !newChannelInput.trim()}
+                  className="px-3"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Blocked channels list */}
+              {blockedChannels.length > 0 ? (
+                <div className="space-y-1">
+                  {blockedChannels.map((channel) => (
+                    <div
+                      key={channel}
+                      className="flex items-center justify-between p-2 rounded-lg bg-accent/30 group"
+                    >
+                      <span className="text-sm font-mono truncate flex-1">
+                        {channel}
+                      </span>
+                      <button
+                        onClick={() => removeBlockedChannel(channel)}
+                        disabled={!globalEnabled}
+                        className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                        aria-label={`Remove ${channel}`}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">
+                  No channels blocked
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
