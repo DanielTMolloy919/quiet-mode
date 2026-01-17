@@ -1,0 +1,729 @@
+<!-- 
+  YOUTUBE CHANNEL PAGE - SIMPLIFIED STRUCTURE FOR ELEMENT BLOCKING
+  Original file was ~2MB, reduced to essential elements only.
+  Each section shows the key selectors that can be used to block/hide content.
+-->
+
+<ytd-app>
+
+<!-- ========== MASTHEAD / HEADER ========== -->
+<div id="masthead-container">
+  <ytd-masthead id="masthead" role="banner">
+    <div id="container">
+      <!-- Left: Menu & Logo -->
+      <div id="start">
+        <yt-icon-button id="guide-button"></yt-icon-button>
+        <ytd-topbar-logo-renderer id="logo">
+          <a href="/" title="YouTube Home">
+            <ytd-logo></ytd-logo>
+          </a>
+          <span id="country-code">AU</span>
+        </ytd-topbar-logo-renderer>
+      </div>
+      
+      <!-- Center: Search -->
+      <div id="center">
+        <yt-searchbox class="ytSearchboxComponentHost">
+          <input class="ytSearchboxComponentInput" name="search_query" placeholder="Search">
+          <button class="ytSearchboxComponentSearchButton" aria-label="Search"></button>
+        </yt-searchbox>
+        <div id="voice-search-button"></div>
+      </div>
+      
+      <!-- Right: User buttons -->
+      <div id="end">
+        <div id="buttons">
+          <ytd-button-renderer aria-label="Create"></ytd-button-renderer>
+          <ytd-notification-topbar-button-renderer>
+            <yt-icon-button id="icon" aria-label="Notifications"></yt-icon-button>
+          </ytd-notification-topbar-button-renderer>
+          <ytd-topbar-menu-button-renderer>
+            <button id="avatar-btn" aria-label="Account menu">
+              <yt-img-shadow><img id="img" alt="Avatar image"></yt-img-shadow>
+            </button>
+          </ytd-topbar-menu-button-renderer>
+        </div>
+      </div>
+    </div>
+  </ytd-masthead>
+</div>
+
+<!-- ========== SIDEBAR / GUIDE ========== -->
+<tp-yt-app-drawer id="guide" role="navigation">
+  <div id="guide-content">
+    <ytd-guide-renderer id="guide-renderer">
+      <div id="sections">
+        <ytd-guide-section-renderer>
+          <div id="items">
+            <!-- Navigation items -->
+            <ytd-guide-entry-renderer is-primary="">
+              <a id="endpoint" href="/" title="Home">
+                <tp-yt-paper-item>
+                  <yt-icon class="guide-icon"></yt-icon>
+                  <yt-formatted-string class="title">Home</yt-formatted-string>
+                </tp-yt-paper-item>
+              </a>
+            </ytd-guide-entry-renderer>
+            
+            <ytd-guide-entry-renderer is-primary="">
+              <a id="endpoint" title="Shorts">
+                <tp-yt-paper-item>
+                  <yt-icon class="guide-icon"></yt-icon>
+                  <yt-formatted-string class="title">Shorts</yt-formatted-string>
+                </tp-yt-paper-item>
+              </a>
+            </ytd-guide-entry-renderer>
+            
+            <ytd-guide-entry-renderer is-primary="">
+              <a id="endpoint" title="Subscriptions">
+                <tp-yt-paper-item>
+                  <yt-icon class="guide-icon"></yt-icon>
+                  <yt-formatted-string class="title">Subscriptions</yt-formatted-string>
+                </tp-yt-paper-item>
+              </a>
+            </ytd-guide-entry-renderer>
+            
+            <!-- More nav items: You, History, Playlists, Watch Later, Liked videos -->
+            <!-- Subscriptions section with channel avatars -->
+            <!-- Explore section: Trending, Shopping, Music, Movies, Live, Gaming, News, Sports, Courses -->
+          </div>
+        </ytd-guide-section-renderer>
+      </div>
+    </ytd-guide-renderer>
+  </div>
+</tp-yt-app-drawer>
+
+<!-- ========== MAIN CONTENT AREA ========== -->
+<div id="content">
+  <ytd-page-manager id="page-manager">
+    <ytd-browse>
+      
+      <!-- ===== CHANNEL HEADER ===== -->
+      <div id="header">
+        <ytd-c4-tabbed-header-renderer>
+          <!-- Channel banner -->
+          <div id="banner">
+            <yt-img-shadow id="banner-image"></yt-img-shadow>
+          </div>
+          
+          <!-- Channel info -->
+          <div id="channel-header">
+            <div id="channel-header-container">
+              <yt-img-shadow id="avatar">
+                <img alt="Channel avatar">
+              </yt-img-shadow>
+              <div id="inner-header-container">
+                <div id="channel-name">
+                  <yt-formatted-string id="text">Channel Name</yt-formatted-string>
+                </div>
+                <div id="channel-handle">@ChannelHandle</div>
+                <div id="subscriber-count">1.5M subscribers</div>
+              </div>
+              <!-- Subscribe button -->
+              <div id="subscribe-button">
+                <ytd-subscribe-button-renderer>
+                  <yt-button-shape>
+                    <button aria-label="Subscribe">Subscribe</button>
+                  </yt-button-shape>
+                </ytd-subscribe-button-renderer>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Channel tabs -->
+          <div id="tabsContainer">
+            <tp-yt-paper-tabs id="tabs">
+              <tp-yt-paper-tab>Home</tp-yt-paper-tab>
+              <tp-yt-paper-tab>Videos</tp-yt-paper-tab>
+              <tp-yt-paper-tab>Shorts</tp-yt-paper-tab>
+              <tp-yt-paper-tab>Live</tp-yt-paper-tab>
+              <tp-yt-paper-tab>Playlists</tp-yt-paper-tab>
+              <tp-yt-paper-tab>Community</tp-yt-paper-tab>
+            </tp-yt-paper-tabs>
+          </div>
+        </ytd-c4-tabbed-header-renderer>
+      </div>
+
+      <!-- ===== MAIN CONTENT GRID ===== -->
+      <div id="contents">
+        <ytd-rich-grid-renderer>
+          <div id="contents">
+            
+            <!-- ===== VIDEO ITEM (Standard) ===== -->
+            <!-- Selector: ytd-rich-item-renderer, yt-lockup-view-model -->
+            <ytd-rich-item-renderer items-per-row="3" lockup="true">
+              <div id="content">
+                <yt-lockup-view-model class="yt-lockup-view-model--vertical">
+                  <!-- Thumbnail -->
+                  <a href="/watch?v=VIDEO_ID" class="yt-lockup-view-model__content-image">
+                    <yt-thumbnail-view-model class="ytThumbnailViewModelHost">
+                      <div class="ytThumbnailViewModelImage">
+                        <img src="https://i.ytimg.com/vi/VIDEO_ID/hq720.jpg">
+                      </div>
+                      <!-- Duration badge -->
+                      <yt-thumbnail-overlay-badge-view-model class="yt-thumbnail-overlay-badge-view-model--bottom-end">
+                        <badge-shape class="yt-badge-shape--thumbnail-badge">
+                          <div class="yt-badge-shape__text">12:34</div>
+                        </badge-shape>
+                      </yt-thumbnail-overlay-badge-view-model>
+                    </yt-thumbnail-view-model>
+                  </a>
+                  
+                  <!-- Metadata -->
+                  <div class="yt-lockup-view-model__metadata">
+                    <yt-lockup-metadata-view-model>
+                      <!-- Channel avatar -->
+                      <div class="yt-lockup-metadata-view-model__avatar">
+                        <yt-avatar-shape>
+                          <img class="yt-spec-avatar-shape__image" src="channel-avatar.jpg">
+                        </yt-avatar-shape>
+                      </div>
+                      
+                      <!-- Title & info -->
+                      <div class="yt-lockup-metadata-view-model__text-container">
+                        <h3 title="Video Title">
+                          <a href="/watch?v=VIDEO_ID" class="yt-lockup-metadata-view-model__title">
+                            <span class="yt-core-attributed-string">Video Title Here</span>
+                          </a>
+                        </h3>
+                        <div class="yt-lockup-metadata-view-model__metadata">
+                          <yt-content-metadata-view-model>
+                            <!-- Channel name -->
+                            <div class="yt-content-metadata-view-model__metadata-row">
+                              <a href="/@ChannelHandle">Channel Name</a>
+                            </div>
+                            <!-- View count & date -->
+                            <div class="yt-content-metadata-view-model__metadata-row">
+                              <span>1.2M views</span>
+                              <span class="yt-content-metadata-view-model__delimiter">•</span>
+                              <span>2 days ago</span>
+                            </div>
+                          </yt-content-metadata-view-model>
+                        </div>
+                      </div>
+                      
+                      <!-- More actions button -->
+                      <div class="yt-lockup-metadata-view-model__menu-button">
+                        <button aria-label="More actions"></button>
+                      </div>
+                    </yt-lockup-metadata-view-model>
+                  </div>
+                </yt-lockup-view-model>
+              </div>
+            </ytd-rich-item-renderer>
+
+            <!-- ===== AD SLOT ===== -->
+            <!-- Selector: ytd-ad-slot-renderer, ytd-in-feed-ad-layout-renderer -->
+            <ytd-rich-item-renderer rich-grid-hover-highlight="">
+              <div id="content">
+                <ytd-ad-slot-renderer layout="">
+                  <div id="fulfilled-layout">
+                    <ytd-in-feed-ad-layout-renderer>
+                      <div id="rendering-content">
+                        <video-display-full-layout-view-model>
+                          <yt-lockup-view-model>
+                            <a href="/watch?v=AD_VIDEO_ID" class="yt-lockup-view-model__content-image">
+                              <yt-thumbnail-view-model>
+                                <img src="ad-thumbnail.jpg">
+                              </yt-thumbnail-view-model>
+                            </a>
+                            <div class="yt-lockup-view-model__metadata">
+                              <feed-ad-metadata-view-model>
+                                <ad-avatar-view-model>
+                                  <yt-avatar-shape></yt-avatar-shape>
+                                </ad-avatar-view-model>
+                                <span>Ad Title</span>
+                                <ad-badge-view-model>
+                                  <badge-shape class="yt-badge-shape--ad">
+                                    <div class="yt-badge-shape__text">Sponsored</div>
+                                  </badge-shape>
+                                </ad-badge-view-model>
+                                <ad-details-line-view-model>
+                                  <span>Advertiser Name</span>
+                                </ad-details-line-view-model>
+                              </feed-ad-metadata-view-model>
+                            </div>
+                          </yt-lockup-view-model>
+                        </video-display-full-layout-view-model>
+                      </div>
+                    </ytd-in-feed-ad-layout-renderer>
+                  </div>
+                </ytd-ad-slot-renderer>
+              </div>
+            </ytd-rich-item-renderer>
+
+            <!-- ===== SURVEY / FEEDBACK ===== -->
+            <!-- Selector: ytd-rich-section-renderer, ytd-inline-survey-renderer -->
+            <ytd-rich-section-renderer>
+              <div id="content">
+                <ytd-inline-survey-renderer rounded-container="">
+                  <div id="dismissible">
+                    <div id="star-survey">
+                      <div id="inline-survey-header">
+                        <h2>
+                          <span id="title">What did you think of this video?</span>
+                          <span id="subtitle">Help us improve YouTube</span>
+                        </h2>
+                        <yt-icon-button aria-label="Dismiss"></yt-icon-button>
+                      </div>
+                      <!-- Video being rated -->
+                      <div id="inline-survey-compact-video-renderer">
+                        <ytd-compact-video-renderer>
+                          <ytd-thumbnail></ytd-thumbnail>
+                          <div class="metadata">
+                            <span id="video-title">Video Title</span>
+                            <ytd-channel-name>Channel Name</ytd-channel-name>
+                          </div>
+                        </ytd-compact-video-renderer>
+                      </div>
+                      <!-- Rating options -->
+                      <div id="rating-survey">
+                        <ytd-rating-survey-renderer>
+                          <div id="ratings">
+                            <ytd-rating-survey-option-renderer aria-label="Terrible"></ytd-rating-survey-option-renderer>
+                            <ytd-rating-survey-option-renderer aria-label="Bad"></ytd-rating-survey-option-renderer>
+                            <ytd-rating-survey-option-renderer aria-label="OK"></ytd-rating-survey-option-renderer>
+                            <ytd-rating-survey-option-renderer aria-label="Good"></ytd-rating-survey-option-renderer>
+                            <ytd-rating-survey-option-renderer aria-label="Excellent"></ytd-rating-survey-option-renderer>
+                          </div>
+                        </ytd-rating-survey-renderer>
+                      </div>
+                    </div>
+                  </div>
+                </ytd-inline-survey-renderer>
+              </div>
+            </ytd-rich-section-renderer>
+
+            <!-- ===== SHELF / HORIZONTAL LIST (e.g., YouTube Playables, Shorts) ===== -->
+            <!-- Selector: ytd-rich-shelf-renderer -->
+            <ytd-rich-section-renderer>
+              <div id="content">
+                <ytd-rich-shelf-renderer elements-per-row="5" show-bottom-divider="">
+                  <div id="dismissible">
+                    <!-- Header -->
+                    <div id="rich-shelf-header-container">
+                      <div id="rich-shelf-header">
+                        <h2>
+                          <div id="title-container">
+                            <a href="/playables">
+                              <span id="title">YouTube Playables</span>
+                            </a>
+                          </div>
+                          <yt-formatted-string id="subtitle">Instant games, no downloads</yt-formatted-string>
+                        </h2>
+                      </div>
+                    </div>
+                    <!-- Items container -->
+                    <div id="rich-shelf-content">
+                      <yt-horizontal-list-renderer>
+                        <div id="items">
+                          <!-- Shelf items go here (games, shorts, etc.) -->
+                          <ytd-game-card-renderer></ytd-game-card-renderer>
+                        </div>
+                        <button id="left-arrow" aria-label="Previous"></button>
+                        <button id="right-arrow" aria-label="Next"></button>
+                      </yt-horizontal-list-renderer>
+                    </div>
+                  </div>
+                </ytd-rich-shelf-renderer>
+              </div>
+            </ytd-rich-section-renderer>
+
+            <!-- ===== SHORTS SHELF ===== -->
+            <!-- Selector: ytd-reel-shelf-renderer -->
+            <ytd-rich-section-renderer>
+              <div id="content">
+                <ytd-reel-shelf-renderer>
+                  <div id="title-container">
+                    <span id="title">Shorts</span>
+                  </div>
+                  <div id="items">
+                    <!-- Short item -->
+                    <ytd-reel-item-renderer>
+                      <a href="/shorts/SHORT_ID">
+                        <ytd-thumbnail>
+                          <img src="short-thumbnail.jpg">
+                        </ytd-thumbnail>
+                        <div id="details">
+                          <h3 id="video-title">Short Title</h3>
+                          <span class="view-count">1M views</span>
+                        </div>
+                      </a>
+                    </ytd-reel-item-renderer>
+                  </div>
+                </ytd-reel-shelf-renderer>
+              </div>
+            </ytd-rich-section-renderer>
+
+          </div>
+        </ytd-rich-grid-renderer>
+
+        <!-- ===== SEARCH RESULTS (when searching) ===== -->
+        <!-- Selector: ytd-section-list-renderer, ytd-item-section-renderer -->
+        <ytd-section-list-renderer page-subtype="channels">
+          <div id="contents">
+            <ytd-item-section-renderer>
+              <div id="contents">
+                
+                <!-- Search result video -->
+                <!-- Selector: ytd-video-renderer -->
+                <ytd-video-renderer is-search="" use-search-ui="">
+                  <div id="dismissible">
+                    <ytd-thumbnail size="large">
+                      <a id="thumbnail" href="/watch?v=VIDEO_ID">
+                        <img src="thumbnail.jpg">
+                        <!-- Duration overlay -->
+                        <ytd-thumbnail-overlay-time-status-renderer>
+                          <badge-shape aria-label="13 minutes, 26 seconds">
+                            <div class="yt-badge-shape__text">13:26</div>
+                          </badge-shape>
+                        </ytd-thumbnail-overlay-time-status-renderer>
+                      </a>
+                    </ytd-thumbnail>
+                    
+                    <div class="text-wrapper">
+                      <div id="meta">
+                        <h3 class="title-and-badge">
+                          <a id="video-title" href="/watch?v=VIDEO_ID" title="Video Title">
+                            <yt-formatted-string>Video Title</yt-formatted-string>
+                          </a>
+                        </h3>
+                        <ytd-video-meta-block>
+                          <div id="metadata">
+                            <div id="metadata-line">
+                              <span class="inline-metadata-item">187K views</span>
+                              <span class="inline-metadata-item">2 years ago</span>
+                            </div>
+                          </div>
+                        </ytd-video-meta-block>
+                      </div>
+                      <div id="channel-info">
+                        <a id="channel-thumbnail" href="/@ChannelHandle">
+                          <yt-img-shadow><img alt=""></yt-img-shadow>
+                        </a>
+                        <ytd-channel-name id="channel-name">
+                          <a href="/@ChannelHandle">Channel Name</a>
+                        </ytd-channel-name>
+                      </div>
+                      <div class="metadata-snippet-container">
+                        <yt-formatted-string class="metadata-snippet-text">Video description preview...</yt-formatted-string>
+                      </div>
+                    </div>
+                  </div>
+                </ytd-video-renderer>
+
+                <!-- Channel result in search -->
+                <!-- Selector: ytd-channel-renderer -->
+                <ytd-channel-renderer>
+                  <div id="channel-info">
+                    <a id="avatar-section" href="/@ChannelHandle">
+                      <yt-img-shadow id="avatar"></yt-img-shadow>
+                    </a>
+                    <div id="info-section">
+                      <div id="channel-title">
+                        <a href="/@ChannelHandle">Channel Name</a>
+                      </div>
+                      <div id="metadata">
+                        <span>@ChannelHandle</span>
+                        <span>1.5M subscribers</span>
+                      </div>
+                      <div id="description">Channel description...</div>
+                    </div>
+                    <div id="subscribe-button">
+                      <ytd-subscribe-button-renderer></ytd-subscribe-button-renderer>
+                    </div>
+                  </div>
+                </ytd-channel-renderer>
+
+              </div>
+            </ytd-item-section-renderer>
+          </div>
+        </ytd-section-list-renderer>
+
+        <!-- ===== COMMUNITY POSTS ===== -->
+        <!-- Selector: ytd-post-renderer, ytd-backstage-post-thread-renderer -->
+        <ytd-rich-section-renderer>
+          <div id="content">
+            <yt-horizontal-list-renderer>
+              <div id="items">
+                
+                <!-- Community post with image -->
+                <ytd-post-renderer attachment="image" has-text="" surface="backstage-surface-type-channel-home">
+                  <div id="dismissible" role="link">
+                    <!-- Author header -->
+                    <div id="header">
+                      <div id="author-thumbnail">
+                        <a href="/@ChannelHandle">
+                          <yt-img-shadow><img alt="Channel Name"></yt-img-shadow>
+                        </a>
+                      </div>
+                      <div id="author">
+                        <a id="author-text" href="/@ChannelHandle">
+                          <span>Channel Name</span>
+                        </a>
+                      </div>
+                      <span id="author-divider">•</span>
+                      <yt-formatted-string id="published-time-text">
+                        <a href="/post/POST_ID">3 weeks ago</a>
+                      </yt-formatted-string>
+                    </div>
+                    
+                    <!-- Post content -->
+                    <div id="body">
+                      <div id="post-text">
+                        <yt-formatted-string id="content-text">Post text content here...</yt-formatted-string>
+                      </div>
+                      <div id="attachments">
+                        <!-- Image attachment -->
+                        <div id="content-attachment">
+                          <ytd-backstage-image-renderer>
+                            <div id="image-container">
+                              <yt-img-shadow><img src="post-image.jpg"></yt-img-shadow>
+                            </div>
+                          </ytd-backstage-image-renderer>
+                        </div>
+                        <!-- Or video attachment -->
+                        <ytd-video-renderer></ytd-video-renderer>
+                        <!-- Or poll -->
+                        <ytd-backstage-poll-renderer id="poll-attachment"></ytd-backstage-poll-renderer>
+                      </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div id="toolbar">
+                      <ytd-comment-action-buttons-renderer id="action-buttons">
+                        <div id="toolbar">
+                          <ytd-toggle-button-renderer id="like-button" aria-label="Like"></ytd-toggle-button-renderer>
+                          <span id="vote-count-middle" aria-label="3.2K likes">3.2K</span>
+                          <ytd-toggle-button-renderer id="dislike-button" aria-label="Dislike"></ytd-toggle-button-renderer>
+                          <div id="share-button"></div>
+                          <div id="reply-button-end">
+                            <a href="/post/POST_ID" aria-label="218 comments">218</a>
+                          </div>
+                        </div>
+                      </ytd-comment-action-buttons-renderer>
+                      <div id="action-menu">
+                        <ytd-menu-renderer>
+                          <yt-icon-button aria-label="Action menu"></yt-icon-button>
+                        </ytd-menu-renderer>
+                      </div>
+                    </div>
+                  </div>
+                </ytd-post-renderer>
+
+              </div>
+            </yt-horizontal-list-renderer>
+          </div>
+        </ytd-rich-section-renderer>
+
+        <!-- ===== COMPACT VIDEO (sidebar recommendations) ===== -->
+        <!-- Selector: ytd-compact-video-renderer -->
+        <ytd-compact-video-renderer lockup="true">
+          <div id="dismissible">
+            <ytd-thumbnail size="large">
+              <a id="thumbnail" href="/watch?v=VIDEO_ID">
+                <img src="thumbnail.jpg">
+                <ytd-thumbnail-overlay-time-status-renderer>
+                  <span id="text">12:34</span>
+                </ytd-thumbnail-overlay-time-status-renderer>
+                <!-- Watch progress bar -->
+                <ytd-thumbnail-overlay-resume-playback-renderer>
+                  <div id="progress"></div>
+                </ytd-thumbnail-overlay-resume-playback-renderer>
+              </a>
+            </ytd-thumbnail>
+            <div class="details">
+              <div class="metadata">
+                <a href="/watch?v=VIDEO_ID">
+                  <h3>
+                    <span id="video-title" title="Video Title">Video Title</span>
+                  </h3>
+                  <ytd-video-meta-block>
+                    <ytd-channel-name id="channel-name">Channel Name</ytd-channel-name>
+                    <span class="inline-metadata-item">722K views</span>
+                    <span class="inline-metadata-item">7 days ago</span>
+                  </ytd-video-meta-block>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ytd-compact-video-renderer>
+
+        <!-- ===== PLAYLIST ITEMS ===== -->
+        <!-- Selector: ytd-playlist-video-renderer -->
+        <ytd-playlist-video-renderer>
+          <div id="content">
+            <div id="index">1</div>
+            <ytd-thumbnail>
+              <a href="/watch?v=VIDEO_ID&list=PLAYLIST_ID">
+                <img src="thumbnail.jpg">
+              </a>
+            </ytd-thumbnail>
+            <div id="meta">
+              <h3 id="video-title">Video Title</h3>
+              <ytd-video-meta-block>
+                <a href="/@ChannelHandle">Channel Name</a>
+              </ytd-video-meta-block>
+            </div>
+          </div>
+        </ytd-playlist-video-renderer>
+
+        <!-- ===== MOVIE/SHOW ITEMS ===== -->
+        <!-- Selector: ytd-movie-renderer -->
+        <ytd-movie-renderer>
+          <ytd-thumbnail>
+            <a href="/watch?v=MOVIE_ID">
+              <img src="movie-poster.jpg">
+            </a>
+          </ytd-thumbnail>
+          <div id="meta">
+            <h3 id="title">Movie Title</h3>
+            <div id="metadata">
+              <span>2023</span>
+              <span>Action</span>
+              <span>From $3.99</span>
+            </div>
+          </div>
+        </ytd-movie-renderer>
+
+        <!-- ===== LIVE STREAM ===== -->
+        <!-- Selector: ytd-video-renderer with badges -->
+        <ytd-video-renderer>
+          <ytd-thumbnail>
+            <a href="/watch?v=LIVE_ID">
+              <img src="live-thumbnail.jpg">
+              <ytd-thumbnail-overlay-time-status-renderer overlay-style="LIVE">
+                <badge-shape class="yt-badge-shape--live">
+                  <div class="yt-badge-shape__text">LIVE</div>
+                </badge-shape>
+              </ytd-thumbnail-overlay-time-status-renderer>
+            </a>
+          </ytd-thumbnail>
+          <div id="meta">
+            <h3 id="video-title">Live Stream Title</h3>
+            <ytd-badge-supported-renderer id="badges">
+              <div class="badge-style-type-live-now">LIVE</div>
+            </ytd-badge-supported-renderer>
+            <div id="metadata-line">
+              <span>1.2K watching</span>
+            </div>
+          </div>
+        </ytd-video-renderer>
+
+        <!-- ===== PREMIERE VIDEO ===== -->
+        <ytd-video-renderer>
+          <ytd-thumbnail>
+            <ytd-thumbnail-overlay-time-status-renderer overlay-style="UPCOMING">
+              <badge-shape>
+                <div class="yt-badge-shape__text">PREMIERES Jan 20</div>
+              </badge-shape>
+            </ytd-thumbnail-overlay-time-status-renderer>
+          </ytd-thumbnail>
+          <ytd-badge-supported-renderer id="badges">
+            <div class="badge-style-type-premiere">Premiere</div>
+          </ytd-badge-supported-renderer>
+        </ytd-video-renderer>
+
+      </div>
+    </ytd-browse>
+  </ytd-page-manager>
+</div>
+
+<!-- ========== MINIPLAYER ========== -->
+<!-- Selector: ytd-miniplayer -->
+<ytd-miniplayer class="ytdMiniplayerComponentHost">
+  <div class="ytdMiniplayerComponentContent">
+    <ytd-miniplayer-info-bar>
+      <h1 class="ytdMiniplayerInfoBarTitle"></h1>
+      <div class="ytdMiniplayerInfoBarSubtitle"></div>
+    </ytd-miniplayer-info-bar>
+  </div>
+</ytd-miniplayer>
+
+</ytd-app>
+
+<!--
+===========================================
+KEY SELECTORS FOR BLOCKING ELEMENTS
+===========================================
+
+VIDEO CONTENT:
+- ytd-rich-item-renderer          (home feed video cards)
+- ytd-video-renderer              (search results, recommendations)
+- ytd-compact-video-renderer      (sidebar suggestions)
+- yt-lockup-view-model            (newer video card component)
+- ytd-reel-item-renderer          (shorts)
+- ytd-playlist-video-renderer     (playlist items)
+- ytd-movie-renderer              (movies/shows)
+
+ADS:
+- ytd-ad-slot-renderer            (ad container)
+- ytd-in-feed-ad-layout-renderer  (in-feed ads)
+- ad-badge-view-model             (sponsored badge)
+- .yt-badge-shape--ad             (ad badge style)
+- ytd-promoted-video-renderer     (promoted videos)
+- ytd-display-ad-renderer         (display ads)
+- ytd-masthead-ad-renderer        (masthead banner ads)
+
+SHORTS:
+- ytd-reel-shelf-renderer         (shorts shelf container)
+- ytd-reel-item-renderer          (individual short)
+- [is-shorts]                     (shorts attribute)
+
+RECOMMENDATIONS/SHELVES:
+- ytd-rich-shelf-renderer         (horizontal shelves)
+- ytd-rich-section-renderer       (section containers)
+- yt-horizontal-list-renderer     (horizontal scroll lists)
+
+COMMUNITY:
+- ytd-post-renderer               (community posts)
+- ytd-backstage-post-thread-renderer
+
+SURVEYS/FEEDBACK:
+- ytd-inline-survey-renderer      (feedback surveys)
+- ytd-rating-survey-renderer      (rating prompts)
+
+NAVIGATION:
+- #masthead                       (top header bar)
+- #guide                          (left sidebar)
+- ytd-guide-renderer              (sidebar menu)
+- ytd-mini-guide-renderer         (collapsed sidebar)
+
+OVERLAYS:
+- ytd-miniplayer                  (floating miniplayer)
+- tp-yt-paper-dialog              (popup dialogs)
+- ytd-popup-container             (popup container)
+
+COMMENTS:
+- ytd-comments                    (comments section)
+- ytd-comment-thread-renderer     (comment threads)
+- ytd-comment-renderer            (individual comments)
+
+CHANNEL ELEMENTS:
+- ytd-c4-tabbed-header-renderer   (channel header)
+- #subscribe-button               (subscribe button)
+- ytd-channel-renderer            (channel in search)
+
+THUMBNAILS:
+- ytd-thumbnail                   (thumbnail container)
+- yt-thumbnail-view-model         (newer thumbnail)
+- #thumbnail                      (thumbnail link)
+
+METADATA:
+- ytd-video-meta-block            (view count, date)
+- ytd-channel-name                (channel name)
+- #video-title                    (video title)
+- .yt-lockup-metadata-view-model__metadata (video info)
+
+BADGES:
+- ytd-badge-supported-renderer    (badges container)
+- badge-shape                     (badge component)
+- .yt-badge-shape--live           (live badge)
+- .yt-badge-shape--thumbnail-badge (duration badge)
+
+BUTTONS:
+- ytd-subscribe-button-renderer   (subscribe button)
+- ytd-toggle-button-renderer      (like/dislike)
+- ytd-button-renderer             (generic buttons)
+- ytd-menu-renderer               (dropdown menus)
+-->
