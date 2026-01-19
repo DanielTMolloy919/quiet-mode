@@ -1,0 +1,452 @@
+<!--
+  YOUTUBE SEARCH RESULTS PAGE - SIMPLIFIED STRUCTURE FOR ELEMENT BLOCKING
+  Original file was ~2MB, reduced to essential elements only.
+  Each section shows the key selectors that can be used to block/hide content.
+-->
+
+<ytd-app>
+
+<!-- ========== MASTHEAD / HEADER ========== -->
+<div id="masthead-container">
+  <ytd-masthead id="masthead" role="banner">
+    <div id="container">
+      <!-- Left: Menu & Logo -->
+      <div id="start">
+        <yt-icon-button id="guide-button"></yt-icon-button>
+        <ytd-topbar-logo-renderer id="logo">
+          <a href="/" title="YouTube Home">
+            <ytd-logo></ytd-logo>
+          </a>
+          <span id="country-code">AU</span>
+        </ytd-topbar-logo-renderer>
+      </div>
+
+      <!-- Center: Search -->
+      <div id="center">
+        <yt-searchbox class="ytSearchboxComponentHost">
+          <input class="ytSearchboxComponentInput" name="search_query" placeholder="Search">
+          <button class="ytSearchboxComponentSearchButton" aria-label="Search"></button>
+        </yt-searchbox>
+        <div id="voice-search-button"></div>
+      </div>
+
+      <!-- Right: User buttons -->
+      <div id="end">
+        <div id="buttons">
+          <ytd-button-renderer aria-label="Create"></ytd-button-renderer>
+          <ytd-notification-topbar-button-renderer>
+            <yt-icon-button id="icon" aria-label="Notifications"></yt-icon-button>
+          </ytd-notification-topbar-button-renderer>
+          <ytd-topbar-menu-button-renderer>
+            <button id="avatar-btn" aria-label="Account menu">
+              <yt-img-shadow><img id="img" alt="Avatar image"></yt-img-shadow>
+            </button>
+          </ytd-topbar-menu-button-renderer>
+        </div>
+      </div>
+    </div>
+  </ytd-masthead>
+</div>
+
+<!-- ========== SIDEBAR / GUIDE ========== -->
+<tp-yt-app-drawer id="guide" role="navigation">
+  <div id="guide-content">
+    <ytd-guide-renderer id="guide-renderer">
+      <div id="sections">
+        <ytd-guide-section-renderer>
+          <div id="items">
+            <!-- Navigation items: Home, Shorts, Subscriptions, etc. -->
+            <ytd-guide-entry-renderer is-primary="">
+              <a id="endpoint" href="/" title="Home">
+                <tp-yt-paper-item>
+                  <yt-icon class="guide-icon"></yt-icon>
+                  <yt-formatted-string class="title">Home</yt-formatted-string>
+                </tp-yt-paper-item>
+              </a>
+            </ytd-guide-entry-renderer>
+          </div>
+        </ytd-guide-section-renderer>
+      </div>
+    </ytd-guide-renderer>
+  </div>
+</tp-yt-app-drawer>
+
+<!-- ========== MAIN CONTENT AREA ========== -->
+<div id="content">
+  <ytd-page-manager id="page-manager">
+    <ytd-browse>
+
+      <!-- ===== FILTER CHIPS BAR ===== -->
+      <!-- Selector: ytd-feed-filter-chip-bar-renderer, yt-chip-cloud-chip-renderer -->
+      <ytd-feed-filter-chip-bar-renderer>
+        <div id="chips-wrapper">
+          <div id="chips-content">
+            <div id="filter"></div>
+            <div id="scroll-container">
+              <iron-selector id="chips" role="tablist">
+                <yt-chip-cloud-chip-renderer chip-style="STYLE_HOME_FILTER" selected="">
+                  <div id="chip-shape-container">
+                    <chip-shape>
+                      <button role="tab" aria-selected="true">All</button>
+                    </chip-shape>
+                  </div>
+                </yt-chip-cloud-chip-renderer>
+                <yt-chip-cloud-chip-renderer chip-style="STYLE_HOME_FILTER">
+                  <div id="chip-shape-container">
+                    <chip-shape>
+                      <button role="tab" aria-selected="false">News</button>
+                    </chip-shape>
+                  </div>
+                </yt-chip-cloud-chip-renderer>
+                <yt-chip-cloud-chip-renderer chip-style="STYLE_HOME_FILTER">
+                  <div id="chip-shape-container">
+                    <chip-shape>
+                      <button role="tab" aria-selected="false">Gaming</button>
+                    </chip-shape>
+                  </div>
+                </yt-chip-cloud-chip-renderer>
+              </iron-selector>
+            </div>
+          </div>
+        </div>
+      </ytd-feed-filter-chip-bar-renderer>
+
+      <!-- ===== SEARCH RESULTS ===== -->
+      <!-- Selector: ytd-section-list-renderer, ytd-item-section-renderer -->
+      <ytd-section-list-renderer page-subtype="channels">
+        <div id="contents">
+          <ytd-item-section-renderer>
+
+            <!-- ===== SEARCH RESULT VIDEO ===== -->
+            <!-- Selector: ytd-video-renderer[is-search], ytd-video-renderer[use-search-ui] -->
+            <ytd-video-renderer is-search="" use-search-ui="" bigger-thumbs-style="BIG" lockup="true">
+              <div id="dismissible">
+                <!-- Thumbnail -->
+                <ytd-thumbnail size="large">
+                  <a id="thumbnail" href="/watch?v=VIDEO_ID">
+                    <img src="thumbnail.jpg">
+                    <!-- Duration overlay -->
+                    <ytd-thumbnail-overlay-time-status-renderer>
+                      <badge-shape aria-label="13 minutes, 26 seconds">
+                        <div class="yt-badge-shape__text">13:26</div>
+                      </badge-shape>
+                    </ytd-thumbnail-overlay-time-status-renderer>
+                  </a>
+                </ytd-thumbnail>
+
+                <!-- Video info -->
+                <div class="text-wrapper">
+                  <div id="meta">
+                    <h3 class="title-and-badge">
+                      <a id="video-title" href="/watch?v=VIDEO_ID" title="Video Title">
+                        <yt-formatted-string>Video Title</yt-formatted-string>
+                      </a>
+                    </h3>
+                    <ytd-video-meta-block>
+                      <div id="metadata">
+                        <div id="metadata-line">
+                          <span class="inline-metadata-item">187K views</span>
+                          <span class="inline-metadata-item">2 years ago</span>
+                        </div>
+                      </div>
+                    </ytd-video-meta-block>
+                  </div>
+                  <div id="channel-info">
+                    <a id="channel-thumbnail" href="/@ChannelHandle">
+                      <yt-img-shadow><img alt=""></yt-img-shadow>
+                    </a>
+                    <ytd-channel-name id="channel-name">
+                      <a href="/@ChannelHandle">Channel Name</a>
+                    </ytd-channel-name>
+                  </div>
+                  <div class="metadata-snippet-container">
+                    <yt-formatted-string class="metadata-snippet-text">Video description preview...</yt-formatted-string>
+                  </div>
+                </div>
+
+                <!-- Expandable metadata (chapters) -->
+                <div id="expandable-metadata">
+                  <ytd-expandable-metadata-renderer>
+                    <div id="header">
+                      <div id="prominent-collapsed-label">
+                        <yt-formatted-string id="prominent-label-text">7 chapters</yt-formatted-string>
+                      </div>
+                    </div>
+                    <div id="content" hidden="">
+                      <ytd-horizontal-card-list-renderer>
+                        <div id="items">
+                          <ytd-macro-markers-list-item-renderer>
+                            <a id="endpoint" href="/watch?v=VIDEO_ID&t=223s">
+                              <div id="thumbnail">
+                                <yt-img-shadow></yt-img-shadow>
+                              </div>
+                              <div id="details">
+                                <h4 class="macro-markers" title="Chapter Title">Chapter Title</h4>
+                                <div id="time">3:43</div>
+                              </div>
+                            </a>
+                          </ytd-macro-markers-list-item-renderer>
+                        </div>
+                      </ytd-horizontal-card-list-renderer>
+                    </div>
+                  </ytd-expandable-metadata-renderer>
+                </div>
+              </div>
+            </ytd-video-renderer>
+
+            <!-- ===== AD IN SEARCH RESULTS ===== -->
+            <!-- Selector: ytd-search-pyv-renderer, ytd-ad-slot-renderer -->
+            <ytd-search-pyv-renderer>
+              <div id="contents">
+                <ytd-ad-slot-renderer layout="">
+                  <div id="fulfilled-layout">
+                    <ytd-in-feed-ad-layout-renderer>
+                      <div id="rendering-content">
+                        <video-display-compact-button-group-layout-view-model>
+                          <yt-lockup-view-model class="yt-lockup-view-model--horizontal">
+                            <a href="AD_URL" class="yt-lockup-view-model__content-image">
+                              <yt-thumbnail-view-model>
+                                <img src="ad-thumbnail.jpg">
+                              </yt-thumbnail-view-model>
+                            </a>
+                            <div class="yt-lockup-view-model__metadata">
+                              <feed-ad-metadata-view-model>
+                                <div class="ytwFeedAdMetadataViewModelHostMetadata">
+                                  <span class="ytwFeedAdMetadataViewModelHostTextsStyleCompactHeadline">Ad Title</span>
+                                  <span class="ytwFeedAdMetadataViewModelHostTextsStyleCompactDescription">Ad description</span>
+                                </div>
+                                <div class="ytwFeedAdMetadataViewModelHostMetadataAdBadgeDetailsLineContainerStyleCompactSearch">
+                                  <div class="ytwFeedAdMetadataViewModelHostAvatarStyleCompact">
+                                    <ad-avatar-view-model>
+                                      <yt-avatar-shape></yt-avatar-shape>
+                                    </ad-avatar-view-model>
+                                    <ad-badge-view-model>
+                                      <badge-shape class="yt-badge-shape--ad">
+                                        <div class="yt-badge-shape__text">Sponsored</div>
+                                      </badge-shape>
+                                    </ad-badge-view-model>
+                                    <ad-details-line-view-model>
+                                      <span>Advertiser Name</span>
+                                    </ad-details-line-view-model>
+                                  </div>
+                                </div>
+                              </feed-ad-metadata-view-model>
+                            </div>
+                          </yt-lockup-view-model>
+                        </video-display-compact-button-group-layout-view-model>
+                      </div>
+                    </ytd-in-feed-ad-layout-renderer>
+                  </div>
+                </ytd-ad-slot-renderer>
+              </div>
+            </ytd-search-pyv-renderer>
+
+            <!-- ===== CHANNEL RESULT IN SEARCH ===== -->
+            <!-- Selector: ytd-channel-renderer -->
+            <ytd-channel-renderer>
+              <div id="channel-info">
+                <a id="avatar-section" href="/@ChannelHandle">
+                  <yt-img-shadow id="avatar"></yt-img-shadow>
+                </a>
+                <div id="info-section">
+                  <div id="channel-title">
+                    <a href="/@ChannelHandle">Channel Name</a>
+                  </div>
+                  <div id="metadata">
+                    <span>@ChannelHandle</span>
+                    <span>1.5M subscribers</span>
+                  </div>
+                  <div id="description">Channel description...</div>
+                </div>
+                <div id="subscribe-button">
+                  <ytd-subscribe-button-renderer></ytd-subscribe-button-renderer>
+                </div>
+              </div>
+            </ytd-channel-renderer>
+
+            <!-- ===== PLAYLIST RESULT IN SEARCH ===== -->
+            <!-- Selector: ytd-playlist-renderer -->
+            <ytd-playlist-renderer>
+              <div id="content">
+                <ytd-thumbnail>
+                  <a href="/playlist?list=PLAYLIST_ID">
+                    <img src="playlist-thumbnail.jpg">
+                  </a>
+                </ytd-thumbnail>
+                <div id="meta">
+                  <h3 id="video-title">
+                    <a href="/playlist?list=PLAYLIST_ID">Playlist Title</a>
+                  </h3>
+                  <ytd-channel-name>
+                    <a href="/@ChannelHandle">Channel Name</a>
+                  </ytd-channel-name>
+                  <div id="metadata">
+                    <span>5 videos</span>
+                  </div>
+                </div>
+              </div>
+            </ytd-playlist-renderer>
+
+            <!-- ===== SHELF SECTION (Related videos, etc.) ===== -->
+            <!-- Selector: ytd-shelf-renderer -->
+            <ytd-shelf-renderer>
+              <div id="dismissible">
+                <!-- Shelf header -->
+                <div id="header">
+                  <h2>
+                    <a href="/playlist?list=PLAYLIST_ID">
+                      <span id="title">Related Playlist</span>
+                    </a>
+                  </h2>
+                </div>
+                <!-- Shelf content -->
+                <div id="content">
+                  <ytd-vertical-list-renderer>
+                    <div id="items">
+                      <!-- Compact video items in shelf -->
+                      <ytd-compact-video-renderer>
+                        <ytd-thumbnail>
+                          <a href="/watch?v=VIDEO_ID">
+                            <img src="thumbnail.jpg">
+                            <ytd-thumbnail-overlay-time-status-renderer>
+                              <span id="text">12:34</span>
+                            </ytd-thumbnail-overlay-time-status-renderer>
+                          </a>
+                        </ytd-thumbnail>
+                        <div class="details">
+                          <div class="metadata">
+                            <a href="/watch?v=VIDEO_ID">
+                              <h3>
+                                <span id="video-title" title="Video Title">Video Title</span>
+                              </h3>
+                              <ytd-video-meta-block>
+                                <ytd-channel-name id="channel-name">Channel Name</ytd-channel-name>
+                                <span class="inline-metadata-item">722K views</span>
+                                <span class="inline-metadata-item">7 days ago</span>
+                              </ytd-video-meta-block>
+                            </a>
+                          </div>
+                        </div>
+                      </ytd-compact-video-renderer>
+                    </div>
+                    <div id="more">
+                      <yt-formatted-string aria-label="+5 more">+5 more</yt-formatted-string>
+                    </div>
+                  </ytd-vertical-list-renderer>
+                </div>
+              </div>
+            </ytd-shelf-renderer>
+
+          </div>
+        </ytd-item-section-renderer>
+      </ytd-section-list-renderer>
+    </ytd-browse>
+  </ytd-page-manager>
+</div>
+
+<!-- ========== MINIPLAYER ========== -->
+<!-- Selector: ytd-miniplayer -->
+<ytd-miniplayer class="ytdMiniplayerComponentHost">
+  <div class="ytdMiniplayerComponentContent">
+    <ytd-miniplayer-info-bar>
+      <h1 class="ytdMiniplayerInfoBarTitle"></h1>
+      <div class="ytdMiniplayerInfoBarSubtitle"></div>
+    </ytd-miniplayer-info-bar>
+  </div>
+</ytd-miniplayer>
+
+</ytd-app>
+
+<!--
+===========================================
+KEY SELECTORS FOR BLOCKING ELEMENTS
+===========================================
+
+SEARCH RESULTS:
+- ytd-section-list-renderer          (main search results container)
+- ytd-item-section-renderer          (section within search results)
+- ytd-video-renderer[is-search]      (search result video)
+- ytd-video-renderer[use-search-ui]  (search UI video)
+- ytd-channel-renderer               (channel result in search)
+- ytd-playlist-renderer              (playlist result in search)
+- ytd-shelf-renderer                 (shelf sections in search)
+
+FILTER CHIPS:
+- ytd-feed-filter-chip-bar-renderer  (filter chips bar)
+- yt-chip-cloud-chip-renderer       (individual filter chip)
+- chip-shape                         (chip component)
+- #chips                             (chips container)
+
+ADS IN SEARCH:
+- ytd-search-pyv-renderer           (search ad container)
+- ytd-ad-slot-renderer               (ad slot)
+- ytd-in-feed-ad-layout-renderer    (in-feed ad layout)
+- feed-ad-metadata-view-model        (ad metadata)
+- ad-badge-view-model                (sponsored badge)
+- .yt-badge-shape--ad                (ad badge style)
+
+VIDEO CONTENT:
+- ytd-video-renderer                 (video result)
+- ytd-compact-video-renderer         (compact video in shelves)
+- ytd-thumbnail                      (thumbnail container)
+- #video-title                       (video title link)
+- ytd-video-meta-block               (view count, date)
+- ytd-channel-name                   (channel name)
+
+EXPANDABLE METADATA:
+- ytd-expandable-metadata-renderer   (expandable sections)
+- ytd-horizontal-card-list-renderer (horizontal card list)
+- ytd-macro-markers-list-item-renderer (chapter markers)
+- #expandable-metadata               (expandable metadata container)
+
+SHELVES:
+- ytd-shelf-renderer                 (shelf container)
+- ytd-vertical-list-renderer         (vertical list in shelf)
+- #more                              ("+X more" indicator)
+
+CHANNEL RESULTS:
+- ytd-channel-renderer               (channel in search)
+- #channel-info                      (channel info container)
+- #avatar-section                    (channel avatar)
+- #subscribe-button                  (subscribe button)
+
+PLAYLIST RESULTS:
+- ytd-playlist-renderer              (playlist in search)
+- #meta                              (playlist metadata)
+
+NAVIGATION:
+- #masthead                          (top header bar)
+- #guide                             (left sidebar)
+- ytd-guide-renderer                 (sidebar menu)
+- ytd-mini-guide-renderer            (collapsed sidebar)
+
+OVERLAYS:
+- ytd-miniplayer                     (floating miniplayer)
+- tp-yt-paper-dialog                 (popup dialogs)
+- ytd-popup-container                (popup container)
+
+THUMBNAILS:
+- ytd-thumbnail                      (thumbnail container)
+- yt-thumbnail-view-model            (newer thumbnail)
+- #thumbnail                         (thumbnail link)
+- ytd-thumbnail-overlay-time-status-renderer (duration overlay)
+
+METADATA:
+- ytd-video-meta-block               (view count, date)
+- ytd-channel-name                   (channel name)
+- .inline-metadata-item              (metadata items)
+- .metadata-snippet-container        (description snippet)
+
+BADGES:
+- ytd-badge-supported-renderer       (badges container)
+- badge-shape                        (badge component)
+- .yt-badge-shape--thumbnail-badge  (duration badge)
+- .yt-badge-shape--ad                (ad badge)
+
+BUTTONS:
+- ytd-subscribe-button-renderer      (subscribe button)
+- ytd-toggle-button-renderer         (like/dislike)
+- ytd-button-renderer                (generic buttons)
+- ytd-menu-renderer                  (dropdown menus)
+- yt-icon-button                     (icon buttons)
+-->
