@@ -41,6 +41,183 @@ function checkBlockedChannel() {
   }
 }
 
+// Selectors for video/content elements that may contain blocked channel content
+const VIDEO_RENDERER_SELECTORS = [
+  'ytd-video-renderer',           // Main search results
+  'ytd-compact-video-renderer',   // Shelf videos / sidebar recommendations
+  'ytd-playlist-renderer',        // Playlists in search
+  'ytd-channel-renderer',         // Channel results in search
+  'ytd-rich-item-renderer',       // Home page / subscription feed items
+];
+
+/**
+ * Extract channel handle from a video/content renderer element
+ */
+function extractChannelFromElement(element: Element): string | null {
+  // Try different selectors for channel links based on element type
+  const channelLinkSelectors = [
+    '#channel-info ytd-channel-name a',  // ytd-video-renderer
+    'ytd-channel-name a',                // Generic channel name link
+    '#channel-info a[href^="/@"]',       // ytd-channel-renderer
+    '#channel-info a[href^="/channel/"]', // Channel ID format
+    'a#avatar-section[href^="/@"]',      // Channel avatar link
+  ];
+
+  for (const selector of channelLinkSelectors) {
+    const link = element.querySelector(selector) as HTMLAnchorElement | null;
+    if (link?.href) {
+      const channelId = extractChannelFromUrl(link.href);
+      if (channelId) return channelId;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Hide videos from blocked channels in search results and other listings
+ */
+function hideBlockedChannelVideos(rootElement?: Element) {
+  if (!settings) return;
+
+  const globalEnabled = settings["global.enabled"] !== false;
+  const blockedChannels = (settings["youtube.blocked_channels"] as string[]) || [];
+
+  // If globally disabled or no blocked channels, unhide any previously hidden elements
+  if (!globalEnabled || blockedChannels.length === 0) {
+    const hiddenElements = document.querySelectorAll('[data-quietmode-blocked="true"]');
+    hiddenElements.forEach(el => {
+      (el as HTMLElement).style.display = '';
+      el.removeAttribute('data-quietmode-blocked');
+    });
+    return;
+  }
+
+  const root = rootElement || document;
+  const selector = VIDEO_RENDERER_SELECTORS.join(', ');
+  const elements = root.querySelectorAll(selector);
+
+  let hiddenCount = 0;
+
+  elements.forEach(element => {
+    const htmlElement = element as HTMLElement;
+    
+    // Skip already processed elements that are hidden
+    if (htmlElement.getAttribute('data-quietmode-blocked') === 'true') {
+      return;
+    }
+
+    const channelId = extractChannelFromElement(element);
+    if (!channelId) return;
+
+    const isBlocked = blockedChannels.some(blockedId =>
+      channelIdsMatch(channelId, blockedId)
+    );
+
+    if (isBlocked) {
+      htmlElement.style.display = 'none';
+      htmlElement.setAttribute('data-quietmode-blocked', 'true');
+      hiddenCount++;
+    } else {
+      // Unhide if previously hidden but no longer blocked
+      if (htmlElement.getAttribute('data-quietmode-blocked') === 'true') {
+        htmlElement.style.display = '';
+        htmlElement.removeAttribute('data-quietmode-blocked');
+      }
+    }
+  });
+
+  if (hiddenCount > 0) {
+    console.log(`[QuietMode:Content] Hidden ${hiddenCount} videos from blocked channels`);
+  }
+}
+
+// Track MutationObserver instance
+let blockedChannelObserver: MutationObserver | null = null;
+let hideDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Debounced version of hideBlockedChannelVideos to avoid excessive processing
+ */
+function hideBlockedChannelVideosDebounced() {
+  if (hideDebounceTimer) {
+    clearTimeout(hideDebounceTimer);
+  }
+  hideDebounceTimer = setTimeout(() => {
+    hideBlockedChannelVideos();
+    hideDebounceTimer = null;
+  }, 100);
+}
+
+/**
+ * Setup MutationObserver to watch for dynamically loaded content
+ * (e.g., infinite scroll in search results)
+ */
+function setupBlockedChannelObserver() {
+  // Disconnect existing observer if any
+  if (blockedChannelObserver) {
+    blockedChannelObserver.disconnect();
+  }
+
+  // Create observer for dynamic content
+  blockedChannelObserver = new MutationObserver((mutations) => {
+    // Check if any relevant elements were added
+    let hasRelevantChanges = false;
+    
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const element = node as Element;
+            // Check if the added element is a video renderer or contains one
+            const tagName = element.tagName.toLowerCase();
+            if (VIDEO_RENDERER_SELECTORS.some(sel => 
+              tagName === sel || element.querySelector(sel)
+            )) {
+              hasRelevantChanges = true;
+              break;
+            }
+          }
+        }
+      }
+      if (hasRelevantChanges) break;
+    }
+
+    if (hasRelevantChanges) {
+      hideBlockedChannelVideosDebounced();
+    }
+  });
+
+  // Observe the main content area for changes
+  const contentTargets = [
+    document.querySelector('ytd-page-manager'),
+    document.querySelector('#content'),
+    document.querySelector('ytd-browse'),
+    document.querySelector('ytd-search'),
+    document.body,
+  ].filter(Boolean) as Element[];
+
+  const targetElement = contentTargets[0] || document.body;
+  
+  blockedChannelObserver.observe(targetElement, {
+    childList: true,
+    subtree: true,
+  });
+
+  console.log('[QuietMode:Content] Blocked channel observer started');
+}
+
+/**
+ * Stop the blocked channel observer
+ */
+function stopBlockedChannelObserver() {
+  if (blockedChannelObserver) {
+    blockedChannelObserver.disconnect();
+    blockedChannelObserver = null;
+    console.log('[QuietMode:Content] Blocked channel observer stopped');
+  }
+}
+
 // Inject CSS into page
 function injectCSS() {
   const style = document.createElement("style");
@@ -105,6 +282,12 @@ async function init() {
     // Check if current page is a blocked channel
     checkBlockedChannel();
 
+    // Hide videos from blocked channels in search results/listings
+    hideBlockedChannelVideos();
+
+    // Setup observer for dynamically loaded content
+    setupBlockedChannelObserver();
+
     // Setup event listeners
     setupEventListeners();
 
@@ -128,24 +311,28 @@ function setupEventListeners() {
   window.addEventListener("load", () => {
     console.log("[QuietMode:Content] Page loaded");
     checkBlockedChannel();
+    hideBlockedChannelVideos();
     initializeBehaviors(1);
   });
 
   window.addEventListener("yt-page-data-updated", () => {
     console.log("[QuietMode:Content] YouTube page updated");
     checkBlockedChannel();
+    hideBlockedChannelVideos();
     initializeBehaviors();
   });
 
   window.addEventListener("state-navigateend", () => {
     console.log("[QuietMode:Content] YouTube navigation ended");
     checkBlockedChannel();
+    hideBlockedChannelVideos();
     initializeBehaviors(2);
   });
 
   // Handle page load completion
   if (document.readyState === "complete") {
     checkBlockedChannel();
+    hideBlockedChannelVideos();
     initializeBehaviors(1);
   }
 
@@ -161,6 +348,7 @@ function setupEventListeners() {
         settings = newSettings;
         applySettings(settings);
         checkBlockedChannel();
+        hideBlockedChannelVideos();
         return;
       }
 
@@ -196,6 +384,7 @@ function setupEventListeners() {
       if (blockedChannelsChanged) {
         console.log("[QuietMode:Content] Blocked channels changed, re-checking");
         checkBlockedChannel();
+        hideBlockedChannelVideos();
       }
     }
   });
