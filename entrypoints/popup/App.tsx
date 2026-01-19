@@ -423,7 +423,7 @@ export default function Popup() {
                               >
                                 <SettingSwitch
                                   displayName={setting.displayName}
-                                  checked={isChecked || isDisabled}
+                                  checked={isChecked || (isChild && isParentEnabled)}
                                   setChecked={() => handleToggle()}
                                 />
                               </div>
@@ -493,7 +493,7 @@ export default function Popup() {
                             <button
                               onClick={() => removeBlockedChannel(channel)}
                               disabled={!globalEnabled}
-                              className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                              className="p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 cursor-pointer"
                               aria-label={`Remove ${channel}`}
                             >
                               <X className="h-4 w-4" />
