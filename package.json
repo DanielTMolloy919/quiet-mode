@@ -2,7 +2,7 @@
   "name": "quiet-mode",
   "description": "YouTube distraction blocker - hide feeds, shorts, recommendations, and more",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

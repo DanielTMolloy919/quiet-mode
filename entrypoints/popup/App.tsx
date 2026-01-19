@@ -19,6 +19,7 @@ import { useTheme } from "./theme-provider";
 import { generateDefaultSettings } from "@/lib/default-settings";
 import { extractChannelFromUrl } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
+import packageJson from "../../package.json";
 
 interface SettingConfig {
   id: string;
@@ -514,7 +515,7 @@ export default function Popup() {
         </div>
 
         <div className="flex gap-2 justify-center items-center text-sm p-3 border-t">
-          <span className="text-muted-foreground">v1.0.0</span>
+          <span className="text-muted-foreground">v{packageJson.version}</span>
           <span className="text-muted-foreground">•</span>
           <button
             onClick={() =>
